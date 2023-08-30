@@ -11,6 +11,7 @@ const CoinAvatar = ({children}) => {
         borderColor: theme.palette.gold[400],
         bgcolor: theme.palette.gold[500],
         color: theme.palette.gold[800],
+        boxShadow: "0 1px 2px rgba(0,0,0,0.4), inset 0 0 2px rgba(0,0,0,0.3)" ,
         "&::before": {
           content: '""',
           position: "absolute",

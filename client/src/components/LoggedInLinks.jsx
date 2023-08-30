@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGetProfileQuery, useLogoutMutation } from "../store/usersApiSlice";
 import { setLogin, setLogout } from "../store/authSlice";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import { stringAvatar, stringToColor } from "../utils/stringAvatar";
 import toast from "react-hot-toast";
-import { useTheme } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import CoinAvatar from "./CoinAvatar";
 
 const LoggedInLinks = ({ userInfo }) => {
@@ -52,6 +52,9 @@ const LoggedInLinks = ({ userInfo }) => {
 
   return (
     <>
+      <Button color="inherit" component={NavLink} to="/dashboard">
+        Dashboard
+      </Button>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title="Account settings">
           <IconButton

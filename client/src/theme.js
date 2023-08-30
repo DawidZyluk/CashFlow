@@ -21,8 +21,8 @@ const tokens = {
     600: "#cc9202",
     700: "#996e02",
     800: "#664901",
-    900: "#332501"
-},
+    900: "#332501",
+  },
   grey: {
     100: "#eff0f2",
     200: "#dee1e5",
@@ -35,6 +35,7 @@ const tokens = {
     900: "#232426",
   },
   info: {
+    50: "#c0e0eb",
     100: "#cce4f0",
     200: "#99c9e2",
     300: "#66add3",
@@ -67,6 +68,7 @@ export const themeOptions = createTheme({
     primary: {
       ...tokens.primary,
       main: tokens.primary[500],
+      dark: tokens.primary[600]
     },
     gold: {
       ...tokens.gold,

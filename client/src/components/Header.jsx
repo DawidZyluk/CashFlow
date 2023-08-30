@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoggedInLinks from "./LoggedInLinks";
+import SideDrawer from "./SideDrawer";
 
 export default function Header() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -15,16 +16,17 @@ export default function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+          <SideDrawer />
           <Typography
             variant="h6"
             component={Link}
             to="/"
-            sx={{ textDecoration: "none", color: "white", marginRight: 'auto'}}
+            sx={{ textDecoration: "none", color: "white", marginRight: "auto" }}
           >
             CashFlow
           </Typography>
           {userInfo ? (
-            <LoggedInLinks userInfo={userInfo}/>
+            <LoggedInLinks userInfo={userInfo} />
           ) : (
             <>
               <Button color="inherit" component={NavLink} to="/login">

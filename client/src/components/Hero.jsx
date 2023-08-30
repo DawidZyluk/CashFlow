@@ -71,7 +71,6 @@ export default function Hero() {
               size="medium"
               sx={{
                 backgroundColor: theme.palette.primary[400],
-
                 "&:hover": {
                   backgroundColor: theme.palette.primary[500],
                 },

@@ -21,6 +21,7 @@ import PageNotFound from "./screens/PageNotFound.jsx";
 import RequestReset from "./screens/RequestReset.jsx";
 import PasswordReset from "./screens/PasswordReset.jsx";
 import VerifyAccount from "./screens/VerifyAccount";
+import Dashboard from "./screens/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -63,7 +64,10 @@ const router = createBrowserRouter([
             path: "profile",
             element: <Profile />,
           },
-          
+          {
+            path: "dashboard",
+            element: <Dashboard />,
+          },
         ],
       },
     ],

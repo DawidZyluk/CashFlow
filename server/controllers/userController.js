@@ -54,7 +54,7 @@ export const register = asyncHandler(async (req, res) => {
     });
     await sendEmail(
       email,
-      "Welcome to MERN-auth",
+      "Welcome to CashFlow",
       { name: user.name, url: link },
       "/server/templates/welcome.ejs"
     );

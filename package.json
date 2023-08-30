@@ -1,5 +1,5 @@
 {
-  "name": "mern-auth",
+  "name": "cashflow",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DawidZyluk/MERN-auth.git"
+    "url": "git+https://github.com/DawidZyluk/CashFlow.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DawidZyluk/MERN-auth/issues"
+    "url": "https://github.com/DawidZyluk/CashFlow/issues"
   },
-  "homepage": "https://github.com/DawidZyluk/MERN-auth#readme",
+  "homepage": "https://github.com/DawidZyluk/CashFlow#readme",
   "devDependencies": {
     "concurrently": "^8.2.0",
     "nodemon": "^3.0.1"

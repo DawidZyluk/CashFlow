@@ -14,13 +14,15 @@ import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import { stringAvatar, stringToColor } from "../utils/stringAvatar";
 import toast from "react-hot-toast";
+import { useTheme } from "@mui/material";
+import CoinAvatar from "./CoinAvatar";
 
 const LoggedInLinks = ({ userInfo }) => {
   const [anchorEl, setAnchorEl] = useState();
   const open = Boolean(anchorEl);
   const [logoutApi] = useLogoutMutation();
   const { data, refetch } = useGetProfileQuery();
-
+  const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -60,10 +62,7 @@ const LoggedInLinks = ({ userInfo }) => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar
-              sx={{ bgcolor: stringToColor(userInfo.name) }}
-              children={`${userInfo.name[0]}`}
-            />
+            <CoinAvatar children={`${userInfo.name[0]}`} />
           </IconButton>
         </Tooltip>
       </Box>

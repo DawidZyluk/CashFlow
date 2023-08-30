@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Avatar } from "@mui/material";
 import LoggedInLinks from "./LoggedInLinks";
 
 export default function Header() {
@@ -22,7 +21,7 @@ export default function Header() {
             to="/"
             sx={{ textDecoration: "none", color: "white", marginRight: 'auto'}}
           >
-            MERN-auth
+            CashFlow
           </Typography>
           {userInfo ? (
             <LoggedInLinks userInfo={userInfo}/>

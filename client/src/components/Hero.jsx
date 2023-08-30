@@ -35,18 +35,23 @@ export default function Hero() {
     >
       <CardContent>
         <Typography variant="h3" fontWeight={300} my={1}>
-          MERN authentication
+          Welcome to CashFlow
         </Typography>
         <Typography mt={3}>
-          Kickstart your MERN authentication projects with this comprehensive
-          boilerplate. Securely store JWT in HTTP-Only cookies for heightened
-          security. Leverage Redux Toolkit for efficient state management and
-          Material UI for polished user interfaces. Seamlessly build apps that
-          combine robustness, security, and user experience.
+          Discover financial empowerment with CashFlow - your ultimate companion
+          in achieving your savings goals. Say goodbye to financial uncertainty
+          and hello to organized, stress-free savings management.
         </Typography>
       </CardContent>
 
-      <CardActions sx={{ display: "flex", justifyContent: "center", flexDirection: "column", mt: 1 }}>
+      <CardActions
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+          mt: 1,
+        }}
+      >
         {userInfo ? (
           <UserInfo userInfo={userInfo} />
         ) : (

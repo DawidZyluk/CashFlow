@@ -51,7 +51,7 @@ const UserInfo = ({ userInfo }) => {
           sx={{
             p: 2,
             mt: 2,
-            bgcolor: theme.palette.primary[100],
+            bgcolor: theme.palette.info[100],
             borderRadius: 1,
           }}
         >
@@ -61,7 +61,7 @@ const UserInfo = ({ userInfo }) => {
           <Typography >
             Don't see it or verification token has expired?
           </Typography>
-          <Button onClick={resendVerificationEmail}>
+          <Button sx={{color: theme.palette.info[500]}} onClick={resendVerificationEmail}>
             Resend verification e-mail
           </Button>
         </Box>

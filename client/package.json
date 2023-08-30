@@ -17,7 +17,7 @@
     "@mui/material": "^5.14.3",
     "@reduxjs/toolkit": "^1.9.5",
     "formik": "^2.4.3",
-    "mern-auth": "file:..",
+    "CashFlow": "file:..",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",

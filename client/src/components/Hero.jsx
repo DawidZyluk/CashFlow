@@ -52,9 +52,7 @@ export default function Hero() {
           mt: 1,
         }}
       >
-        {userInfo ? (
-          <UserInfo userInfo={userInfo} />
-        ) : (
+        {!userInfo && (
           <Stack direction="row" spacing={2}>
             <Button
               variant="outlined"

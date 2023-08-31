@@ -29,7 +29,6 @@ const VerifyAccount = () => {
         dispatch(setLogin({...userInfo, ...res.user}));
         setResult(res.message);
       } catch (error) {
-        console.log(error);
         if(error.status === 401) setResult("You have to be logged in to verify your e-mail");
         else setResult(error.data.message);
         setErrorStatus(error.status);

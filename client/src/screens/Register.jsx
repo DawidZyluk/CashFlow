@@ -42,7 +42,7 @@ export default function Register() {
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [navigate, userInfo]);
 
@@ -51,7 +51,7 @@ export default function Register() {
     try {
       const res = await register({ name, email, password, confirmPassword }).unwrap();
       dispatch(setLogin({ ...res, rememberMe: true }));
-      navigate("/");
+      navigate("/dashboard");
       onSubmitProps.resetForm();
       toast.success("Successfully registered!");
     } catch (err) {

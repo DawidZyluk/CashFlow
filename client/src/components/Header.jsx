@@ -16,11 +16,11 @@ export default function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <SideDrawer />
+          {userInfo && <SideDrawer />}
           <Typography
             variant="h6"
             component={Link}
-            to="/"
+            to= {userInfo ? "/dashboard" : '/'}
             sx={{ textDecoration: "none", color: "white", marginRight: "auto" }}
           >
             CashFlow

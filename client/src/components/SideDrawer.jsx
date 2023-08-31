@@ -8,14 +8,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-// import InboxIcon from "@mui/icons-material/MoveToInbox";
-// import MailIcon from "@mui/icons-material/Mail";
 import { IconButton } from "@mui/material";
-// import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import UserInfo from "./UserInfo";
 import { useSelector } from "react-redux";
-import { Person, Menu, AccountBalanceWallet, Widgets } from "@mui/icons-material";
+import { Home, Menu, AccountBalanceWallet, Widgets } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export default function SideDrawer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,9 +31,9 @@ export default function SideDrawer() {
   };
 
   const tabList = [
-    { name: "My Account", icon: <Person /> },
-    { name: "My Wallets", icon: <AccountBalanceWallet /> },
-    { name: "Categories", icon: <Widgets /> },
+    { name: "Dashboard", path: '/dashboard', icon: <Home /> },
+    { name: "My Wallets", path: '/#', icon: <AccountBalanceWallet /> },
+    { name: "Categories", path: '/#', icon: <Widgets /> },
   ];
 
   return (
@@ -60,9 +58,9 @@ export default function SideDrawer() {
           onKeyDown={toggleDrawer()}
         >
           <List>
-            {tabList.map(({ name, icon }) => (
+            {tabList.map(({ name, path, icon }) => (
               <ListItem key={name} disablePadding>
-                <ListItemButton>
+                <ListItemButton component={Link} to={path}>
                   <ListItemIcon>{icon}</ListItemIcon>
                   <ListItemText primary={name} />
                 </ListItemButton>

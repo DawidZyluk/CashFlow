@@ -166,7 +166,7 @@ export const requestVerifyAccount = asyncHandler(async (req, res) => {
 
   const user = await User.findById(req.user._id).select("name email verified");;
   if (user.verified)
-    return res.status(208).json({ message: "User already verified", user });
+    return res.status(200).json({ message: "User already verified", user });
 
   const newToken = await createToken(_id, "verification");
   const link = `${process.env.CLIENT_URL}verifyAccount?token=${newToken}&id=${_id}`;

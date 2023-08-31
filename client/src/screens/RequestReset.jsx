@@ -30,7 +30,7 @@ export default function RequestReset() {
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/profile");
+      navigate("/dashboard");
     }
   }, [navigate, userInfo]);
 

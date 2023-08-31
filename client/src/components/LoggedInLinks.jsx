@@ -52,9 +52,6 @@ const LoggedInLinks = ({ userInfo }) => {
 
   return (
     <>
-      <Button color="inherit" component={NavLink} to="/dashboard">
-        Dashboard
-      </Button>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -65,7 +62,7 @@ const LoggedInLinks = ({ userInfo }) => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <CoinAvatar children={`${userInfo.name[0]}`} />
+            <CoinAvatar initials={`${userInfo.name[0]}`} />
           </IconButton>
         </Tooltip>
       </Box>

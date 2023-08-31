@@ -5,9 +5,6 @@ import { Container } from "@mui/material";
 
 const Dashboard = () => {
   const { verified } = useSelector((state) => state.auth.userInfo);
-
-  console.log(verified);
-
   
   return (
     <Container>

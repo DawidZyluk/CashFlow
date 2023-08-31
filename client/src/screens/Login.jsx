@@ -38,7 +38,7 @@ export default function Login() {
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [navigate, userInfo]);
 
@@ -48,7 +48,7 @@ export default function Login() {
       const res = await login({ email, password }).unwrap();
       dispatch(setLogin({ ...res, rememberMe }));
       onSubmitProps.resetForm();
-      navigate("/");
+      navigate("/dashboard");
       toast.success("User logged in!");
     } catch (err) {
       console.log(err?.data?.message || err.error);

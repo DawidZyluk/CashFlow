@@ -16,7 +16,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import React, { useState } from "react";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { toast } from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLogin } from "../store/authSlice";
 import { useRequestVerifyAccountMutation } from "../store/usersApiSlice";
 
@@ -25,11 +25,12 @@ const Verification = () => {
   const [isOpen, setIsOpen] = useState(true);
   const dispatch = useDispatch();
   const [requestVerification] = useRequestVerifyAccountMutation();
+  const { userInfo } = useSelector((state) => state.auth);
 
   const resendVerificationEmail = async () => {
     try {
       const res = await requestVerification().unwrap();
-      if (res.user) dispatch(setLogin({ ...UserInfo, ...res.user }));
+      if (res.user) dispatch(setLogin({ ...userInfo, ...res.user }));
       toast.success(res.message);
     } catch (error) {
       toast.error(error.data.message);
@@ -37,9 +38,8 @@ const Verification = () => {
   };
 
   return (
-    <Container>
-      <Collapse in={isOpen}>
-        <Accordion sx={{ pr: 3, background: theme.palette.info[100] }}>
+    <Collapse in={isOpen} sx={{pt: .3}}>
+        <Accordion sx={{ pr: 3, background: theme.palette.info[100]}}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
@@ -94,8 +94,6 @@ const Verification = () => {
           </AccordionDetails>
         </Accordion>
       </Collapse>
-      <p>ebe ebe</p>
-    </Container>
   );
 };
 

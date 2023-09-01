@@ -3,11 +3,11 @@ const router = express.Router();
 import { login, getUserProfile, logoutUser, register, requestPasswordReset, resetPassword, updateUserProfile, verifyAccount, requestVerifyAccount } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { validator } from '../middleware/validatorMiddleware.js';
-import { loginSchema } from '../validators/loginValidator.js';
-import { registerSchema } from '../validators/registerValidator.js';
-import { updateSchema } from '../validators/updateSchema.js';
-import { resetRequestSchema } from '../validators/resetValidator.js';
-import { passwordResetSchema } from '../validators/passwordResetValidator.js';
+import { loginSchema } from '../validators/userValidators/loginValidator.js';
+import { registerSchema } from '../validators/userValidators/registerValidator.js';
+import { updateSchema } from '../validators/userValidators/updateSchema.js';
+import { resetRequestSchema } from '../validators/userValidators/resetValidator.js';
+import { passwordResetSchema } from '../validators/userValidators/passwordResetValidator.js';
 import { createAccountLimiter, loginLimiter } from '../middleware/limiters.js';
 
 router.post('/register', validator(registerSchema), createAccountLimiter, register)

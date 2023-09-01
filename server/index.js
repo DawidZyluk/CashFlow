@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
+import entryRoutes from "./routes/entryRoutes.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
@@ -22,6 +23,7 @@ app.use(apiLimiter)
 connectDB();
 
 app.use("/api/users", userRoutes);
+app.use("/api/data", entryRoutes);
 
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();

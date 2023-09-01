@@ -7,7 +7,12 @@ const entrySchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
-    label: {
+    accountId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Account",
+    },
+    date: {
       type: Date,
       required: true,
     },
@@ -16,10 +21,6 @@ const entrySchema = mongoose.Schema(
       required: true,
     },
     category: {
-      type: String,
-      required: true,
-    },
-    account: {
       type: String,
       required: true,
     },

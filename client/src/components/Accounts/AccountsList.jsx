@@ -1,4 +1,4 @@
-import { Button, Card, Typography } from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import AddAccount from "./AddAccount";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
@@ -11,7 +11,7 @@ const AccountsList = () => {
   const { data, refetch } = useGetAccountsQuery();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const accounts = useSelector((state) => state.auth.accounts)
+  const accounts = useSelector((state) => state.auth.accounts);
 
   useEffect(() => {
     refetch();
@@ -19,13 +19,16 @@ const AccountsList = () => {
   }, [data, accounts]);
 
   return (
-    <Card sx={{ my: 1, p: 1, display: "flex" }}>
-      {data?.accounts.map((account) => {
-        return (
-          <AccountButon account={account}/>
-        );
-      })}
-      <AddAccount />
+    <Card sx={{ p: 2, my: 1 }}>
+      <Typography sx={{ my: 0 }} variant="h5">
+        Accounts
+      </Typography>
+      <Box sx={{ display: "flex", mt: 2 }}>
+        {data?.accounts.map((account) => (
+          <AccountButon key={account._id} account={account} />
+        ))}
+        <AddAccount />
+      </Box>
     </Card>
   );
 };

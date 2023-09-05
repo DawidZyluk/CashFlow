@@ -17,6 +17,10 @@ export default function Header() {
       <AppBar position="static">
         <Toolbar>
           {userInfo && <SideDrawer />}
+          <Box component="img" alt="logo" src="/logo.png" sx={{
+            width: "2.2rem",
+            mr: .5
+          }}/>
           <Typography
             variant="h6"
             component={Link}

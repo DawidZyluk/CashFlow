@@ -68,7 +68,7 @@ export default function AddAccount() {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button variant="outlined" sx={{height: '100%', width: '9rem'}} onClick={handleClickOpen}>
         + Add Account
       </Button>
       <Dialog open={open} onClose={handleClose}>

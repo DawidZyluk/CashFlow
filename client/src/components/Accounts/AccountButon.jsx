@@ -9,7 +9,8 @@ const AccountButon = ({account}) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "start",
-        mx: 1,
+        mr: 1.5,
+        width: '9rem'
       }}
       key={account._id}
     >

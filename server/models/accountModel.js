@@ -7,7 +7,7 @@ const accountSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
-    name: {
+    accountName: {
       type: String,
       required: true,
     },
@@ -18,7 +18,7 @@ const accountSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    initialBalance: {
+    balance: {
       type: Number,
       required: true,
     },

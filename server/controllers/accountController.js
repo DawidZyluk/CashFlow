@@ -2,25 +2,36 @@ import Account from "../models/accountModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const addAccount = asyncHandler(async (req, res) => {
-  const { userId, name, accountNumber, accountType, initialBalance } = req.body;
+  const { accountName, accountNumber, accountType, balance } = req.body;
+  const userId = req.user._id;
 
   const account = await Account.create({
     userId,
-    name,
+    accountName,
     accountNumber,
     accountType,
-    initialBalance,
+    balance,
   });
 
   if (account) {
     res.status(201).json({
-      userId: account.userId,
-      name: account.name,
+      _id: account._id,
+      accountName: account.accountName,
       accountNumber: account.accountNumber,
       accountType: account.accountType,
-      initialBalance: account.initialBalance,
+      balance: account.balance,
     });
   } else {
     res.status(400).json({ message: "Invalid account data" });
   }
+});
+
+export const getAccounts = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const accounts = await Account.find({ userId }).select(
+    "accountName accountNumber accountType balance"
+  );
+  res.status(201).json({
+    accounts,
+  });
 });

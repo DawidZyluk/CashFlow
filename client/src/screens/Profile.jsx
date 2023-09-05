@@ -43,7 +43,7 @@ export default function Profile() {
       dispatch(setLogin({...userInfo, ...res }));
       toast.success("Profile Updated!");
     } catch (err) {
-      console.log(err?.data?.message || err.error);
+      //console.log(err?.data?.message || err.error);
     }
   };
 

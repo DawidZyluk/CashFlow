@@ -18,8 +18,8 @@ export default function Header() {
         <Toolbar>
           {userInfo && <SideDrawer />}
           <Box component="img" alt="logo" src="/logo.png" sx={{
-            width: "2.2rem",
-            mr: .5
+            width: "2rem",
+            mr: .4
           }}/>
           <Typography
             variant="h6"

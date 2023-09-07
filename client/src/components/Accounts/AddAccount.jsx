@@ -42,8 +42,8 @@ export default function AddAccount() {
     try {
       const res = await addAccount(values).unwrap();
       dispatch(setAccounts({accounts: [ ...accounts, res ]}));
-      // onSubmitProps.resetForm();
-      // setOpen(false);
+      onSubmitProps.resetForm();
+      setOpen(false);
       toast.success("Account Created!");
     } catch (err) {
       toast.error("Can't add an account. Try again.")

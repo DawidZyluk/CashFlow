@@ -86,8 +86,8 @@ export default function AddEntry() {
   const initialValues = {
     date: date,
     value: "",
-    accountId: "",
-    category: "",
+    accountId: accounts?.length ? accounts[0]._id : "",
+    category: "Salary",
     note: "",
   };
 
@@ -95,7 +95,7 @@ export default function AddEntry() {
     <div>
       <Button
         variant="outlined"
-        sx={{ height: "100%" }}
+        sx={{ height: "100%", mb: 3 }}
         onClick={handleClickOpen}
       >
         + Add Entry
@@ -166,6 +166,7 @@ export default function AddEntry() {
                       error={Boolean(touched.date) && Boolean(errors.date)}
                       helperText={touched.date && errors.date}
                       sx={{ gridColumn: "span 2" }}
+                      disableFuture
                     />
                   </LocalizationProvider>
                   <TextField
@@ -206,8 +207,8 @@ export default function AddEntry() {
                         Boolean(touched.accountId) && Boolean(errors.accountId)
                       }
                     >
-                      {accounts.map((account) => (
-                        <MenuItem key={account._id} value={account._id}>
+                      {accounts.map((account, index) => (
+                        <MenuItem key={account._id} value={account._id} defaultChecked={index == 0}>
                           {account.accountName}
                         </MenuItem>
                       ))}

@@ -1,5 +1,5 @@
 import { Box, Card, Divider, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AddEntry from "./AddEntry";
 import { useGetEntriesQuery } from "../../store/entriesApiSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ const RecentEntriesList = () => {
   const { data, refetch } = useGetEntriesQuery();
   const dispatch = useDispatch();
   const entries = useSelector((state) => state.auth.entries);
+  const [entriesState, setEntriesState] = useState([]);
 
   useEffect(() => {
     refetch();
@@ -44,8 +45,9 @@ const RecentEntriesList = () => {
         };
       });
     }
-    if (groupedEntries) dispatch(setEntries({ entries: groupedEntries }));
-  }, [data]);
+    setEntriesState(groupedEntries);
+    dispatch(setEntries({ entries: data?.entries }));
+  }, [data, entries]);
 
   return (
     <Card sx={{ p: 2, my: 1 }}>
@@ -62,7 +64,7 @@ const RecentEntriesList = () => {
         }}
       >
       <AddEntry />
-        {entries.map((entryGroup) => (
+        {entriesState?.map((entryGroup) => (
           <Card
             variant="outlined"
             key={entryGroup.date}

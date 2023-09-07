@@ -21,7 +21,6 @@ const CoinAvatar = ({
         height: sx.diameter,
         width: sx.diameter,
         fontSize: `calc(${sx.diameter} / 2)`,
-        boxShadow: "0 1px 2px rgba(0,0,0,0.4), inset 0 0 2px rgba(0,0,0,0.3)",
         boxShadow: `0 ${shade/2}px ${shade}px rgba(0,0,0,0.4), inset 0 0 ${shade}px rgba(0,0,0,0.3)`,
         "&::before": {
           content: '""',

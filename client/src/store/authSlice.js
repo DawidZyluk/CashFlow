@@ -5,6 +5,7 @@ const initialState = {
     ? JSON.parse(localStorage.getItem("userInfo"))
     : JSON.parse(sessionStorage.getItem("userInfo")),
   accounts: [],
+  entries: [],
 };
 
 const authSlice = createSlice({
@@ -28,9 +29,12 @@ const authSlice = createSlice({
     setAccounts: (state, action) => {
       state.accounts = action.payload.accounts;
     },
+    setEntries: (state, action) => {
+      state.entries = action.payload.entries;
+    },
   },
 });
 
-export const { setLogin, setLogout, setAccounts } = authSlice.actions;
+export const { setLogin, setLogout, setAccounts, setEntries } = authSlice.actions;
 
 export default authSlice.reducer;

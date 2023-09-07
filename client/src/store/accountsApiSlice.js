@@ -1,19 +1,19 @@
 import { apiSlice } from "./apiSlice";
 
-const DATA_URL = "/api/accounts";
+const ACCOUNTS_URL = "/api/accounts";
 
 export const accountsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     addAccount: builder.mutation({
       query: (data) => ({
-        url: `${DATA_URL}/addAccount`,
+        url: `${ACCOUNTS_URL}/addAccount`,
         method: "POST",
         body: data,
       }),
     }),
     getAccounts: builder.query({
       query: () => ({
-        url: `${DATA_URL}/getAccounts`,
+        url: `${ACCOUNTS_URL}/getAccounts`,
       }),
       keepUnusedDataFor: 1
     }),

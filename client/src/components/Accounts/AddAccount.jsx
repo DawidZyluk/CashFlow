@@ -17,7 +17,7 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { useAddAccountMutation, useGetAccountsQuery } from "../../store/accountsApiSlice";
+import { useAddAccountMutation } from "../../store/accountsApiSlice";
 import { useTheme } from "@emotion/react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,10 +41,9 @@ export default function AddAccount() {
   const handleSubmit = async (values, onSubmitProps) => {
     try {
       const res = await addAccount(values).unwrap();
-      console.log([ ...accounts, res ])
-      dispatch(setAccounts([ ...accounts, res ]));
-      onSubmitProps.resetForm();
-      setOpen(false);
+      dispatch(setAccounts({accounts: [ ...accounts, res ]}));
+      // onSubmitProps.resetForm();
+      // setOpen(false);
       toast.success("Account Created!");
     } catch (err) {
       toast.error("Can't add an account. Try again.")
@@ -125,7 +124,7 @@ export default function AddAccount() {
                   margin="normal"
                   fullWidth
                   name="accountNumber"
-                  label="Account Number"
+                  label="Account Number (optional)"
                   id="accountNumber"
                   autoComplete="accountNumber"
                   onBlur={handleBlur}

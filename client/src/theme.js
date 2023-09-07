@@ -60,11 +60,12 @@ const tokens = {
   },
 };
 
-const defaultTheme = createTheme();
-
 export const themeOptions = createTheme({
   palette: {
     mode: "light",
+    background: {
+      default: tokens.grey[100]
+    },
     primary: {
       ...tokens.primary,
       main: tokens.primary[500],

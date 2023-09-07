@@ -4,13 +4,11 @@ import AddAccount from "./AddAccount";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
 import { setAccounts } from "../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useTheme } from "@emotion/react";
 import AccountButon from "./AccountButon";
 
 const AccountsList = () => {
   const { data, refetch } = useGetAccountsQuery();
   const dispatch = useDispatch();
-  const theme = useTheme();
   const accounts = useSelector((state) => state.auth.accounts);
 
   useEffect(() => {

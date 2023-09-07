@@ -13,7 +13,7 @@ const entrySchema = mongoose.Schema(
       ref: "Account",
     },
     date: {
-      type: Date,
+      type: String,
       required: true,
     },
     value: {
@@ -23,6 +23,9 @@ const entrySchema = mongoose.Schema(
     category: {
       type: String,
       required: true,
+    },
+    note: {
+      type: String,
     },
   },
   {

@@ -1,3 +1,4 @@
+import Account from "../models/accountModel.js";
 import Entry from "../models/entryModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -12,6 +13,10 @@ export const addEntry = asyncHandler(async (req, res) => {
     category,
     note
   });
+
+  const account = await Account.findOne({_id: accountId});
+  account.balance += value;
+  account.save();
 
   if (entry) {
     res.status(201).json({
@@ -30,7 +35,7 @@ export const addEntry = asyncHandler(async (req, res) => {
 
 export const getEntries = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const entries = await Entry.find({ userId }).select(" -__v")
+  const entries = await Entry.find({ userId }).select(" -__v").populate('accountId', 'accountName')
   //const entries = await Entry.find({ userId }).sort('-updatedAt').limit(10).select("-createdAt -updatedAt -__v")
   res.status(201).json({
     entries,

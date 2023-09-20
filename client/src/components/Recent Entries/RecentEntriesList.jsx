@@ -41,7 +41,7 @@ export default function RecentEntries() {
   useEffect(() => {
     refetch();
     dispatch(setEntries({ entries: data?.entries }));
-    console.log(data?.entries[0]);
+    //console.log(data?.entries[0]);
   }, [data, entries]);
 
   const columns = [
@@ -50,6 +50,14 @@ export default function RecentEntries() {
       headerName: "Date",
       flex: 1,
       valueFormatter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
+    },
+    {
+      field: "accountId",
+      headerName: "Account",
+      flex: 1,
+      align: "left",
+      headerAlign: "left",
+      valueFormatter: (params) => `${params.value.accountName}`,
     },
     {
       field: "category",
@@ -62,7 +70,7 @@ export default function RecentEntries() {
       field: "value",
       headerName: "Value",
       type: "number",
-      flex: 1,
+      flex: .8,
       align: "left",
       headerAlign: "left",
       valueFormatter: (params) => `$${params.value.toFixed(2)}`,
@@ -109,7 +117,14 @@ export default function RecentEntries() {
 
   return (
     <Card sx={{ p: 2, my: 1 }}>
-      <Box sx={{display: 'flex', height: '2.5rem', justifyContent: 'space-between'}}>
+      <Box
+        sx={{
+          display: "flex",
+          height: "2.5rem",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography sx={{ my: 0 }} variant="h5">
           Recent Entries
         </Typography>

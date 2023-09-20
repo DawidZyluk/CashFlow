@@ -21,7 +21,7 @@ import {
 import { useTheme } from "@emotion/react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setEntries } from "../../store/authSlice";
+import { setAccounts, setEntries } from "../../store/authSlice";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,6 +33,7 @@ import timezone from "dayjs/plugin/timezone";
 import { useState } from "react";
 import { useAddEntryMutation } from "../../store/entriesApiSlice";
 import { categories } from "./categories";
+import { useGetAccountsQuery } from "../../store/accountsApiSlice";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -42,6 +43,7 @@ dayjs.tz.setDefault(localTimezone);
 export default function AddEntry() {
   const [open, setOpen] = React.useState(false);
   const [addEntry, { error }] = useAddEntryMutation();
+  const { data, refetch } = useGetAccountsQuery();
   const theme = useTheme();
   const dispatch = useDispatch();
   const entries = useSelector((state) => state.auth.entries);
@@ -62,12 +64,14 @@ export default function AddEntry() {
     try {
       const res = await addEntry({ ...values, date: date.format() }).unwrap();
       dispatch(setEntries({ entries: [...entries, res] }));
+      refetch();
+      dispatch(setAccounts({ ...data }));
       setOpen(false);
       onSubmitProps.resetForm();
       setDate(dayjs());
       toast.success("Entry Created!");
     } catch (err) {
-      toast.error("Can't add an account. Try again.");
+      toast.error("Can't add entry. Try again.");
       console.log(err);
     }
   };
@@ -95,7 +99,7 @@ export default function AddEntry() {
     <div>
       <Button
         variant="outlined"
-        sx={{ height: "100%", mb: 3 }}
+        sx={{ height: "100%" }}
         onClick={handleClickOpen}
       >
         + Add Entry

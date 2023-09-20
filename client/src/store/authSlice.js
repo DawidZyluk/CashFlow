@@ -16,7 +16,7 @@ const authSlice = createSlice({
       state.userInfo = action.payload;
       if (action.payload.rememberMe) {
         localStorage.setItem("userInfo", JSON.stringify(action.payload));
-        const expirationTime = localStorage.getItem("expirationTime") ?? new Date().getTime() + 1000 * 60 * 60 * 24 * 30;
+        const expirationTime = localStorage.getItem("expirationTime") ?? new Date().getTime() + 1000 * 60 * 60 * 24 * 29;
         localStorage.setItem("expirationTime", expirationTime);
       } else sessionStorage.setItem("userInfo", JSON.stringify(action.payload));
     },

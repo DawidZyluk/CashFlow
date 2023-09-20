@@ -30,7 +30,8 @@ export const addEntry = asyncHandler(async (req, res) => {
 
 export const getEntries = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const entries = await Entry.find({ userId }).select("-createdAt -updatedAt -__v")
+  const entries = await Entry.find({ userId }).select(" -__v")
+  //const entries = await Entry.find({ userId }).sort('-updatedAt').limit(10).select("-createdAt -updatedAt -__v")
   res.status(201).json({
     entries,
   });

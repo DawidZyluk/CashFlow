@@ -62,9 +62,9 @@ export default function AddEntry() {
     try {
       const res = await addEntry({ ...values, date: date.format() }).unwrap();
       dispatch(setEntries({ entries: [...entries, res] }));
+      setOpen(false);
       onSubmitProps.resetForm();
       setDate(dayjs());
-      setOpen(false);
       toast.success("Entry Created!");
     } catch (err) {
       toast.error("Can't add an account. Try again.");

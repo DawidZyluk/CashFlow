@@ -49,7 +49,7 @@ export default function Profile() {
 
   return (
     <Container component="main" maxWidth="sm">
-      <Box
+      <Card
         sx={{
           boxShadow: 3,
           borderRadius: 2,
@@ -172,7 +172,7 @@ export default function Profile() {
             </Box>
           )}
         </Formik>
-      </Box>
+      </Card>
     </Container>
   );
 }

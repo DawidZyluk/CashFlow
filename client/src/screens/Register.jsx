@@ -61,7 +61,7 @@ export default function Register() {
 
   return (
     <Container component="main" maxWidth="sm">
-      <Box
+      <Card
         sx={{
           boxShadow: 3,
           borderRadius: 2,
@@ -189,7 +189,7 @@ export default function Register() {
             </Box>
           )}
         </Formik>
-      </Box>
+      </Card>
     </Container>
   );
 }

@@ -46,7 +46,7 @@ export default function RequestReset() {
 
   return (
     <Container component="main" maxWidth="sm">
-      <Box
+      <Card
         sx={{
           boxShadow: 3,
           borderRadius: 2,
@@ -126,7 +126,7 @@ export default function RequestReset() {
             </Box>
           )}
         </Formik>
-      </Box>
+      </Card>
     </Container>
   );
 }

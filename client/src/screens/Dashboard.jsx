@@ -5,6 +5,7 @@ import { Container, Typography } from "@mui/material";
 import AccountsList from "../components/Accounts/AccountsList";
 import RecentEntriesList from "../components/Recent Entries/RecentEntriesList";
 import AddEntry from "../components/Recent Entries/AddEntry";
+import { LineChart } from "../components/LineChart";
 
 const Dashboard = () => {
   const { verified } = useSelector((state) => state.auth.userInfo);
@@ -14,6 +15,7 @@ const Dashboard = () => {
       <Typography sx={{my: 2}} variant="h4">Dashboard</Typography>
       {!verified && <Verification />}
       <AccountsList />
+      <LineChart />
       <RecentEntriesList />
     </Container>
   );

@@ -41,7 +41,7 @@ export default function RecentEntries() {
   useEffect(() => {
     refetch();
     dispatch(setEntries({ entries: data?.entries }));
-    //console.log(data?.entries[0]);
+    console.log(data?.entries[0]);
   }, [data, entries]);
 
   const columns = [

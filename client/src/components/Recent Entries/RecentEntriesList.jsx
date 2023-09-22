@@ -37,6 +37,7 @@ export default function RecentEntries() {
   const { data, refetch, isFetching } = useGetEntriesQuery();
   const dispatch = useDispatch();
   const entries = useSelector((state) => state.auth.entries);
+  const accounts = useSelector((state) => state.auth.accounts);
 
   useEffect(() => {
     refetch();
@@ -57,14 +58,16 @@ export default function RecentEntries() {
       flex: 1,
       align: "left",
       headerAlign: "left",
-      valueFormatter: (params) => `${params.value.accountName}`,
+      type: "singleSelect",
+      valueOptions: accounts?.map((obj) => obj.accountName),
+      valueGetter: (params) => params.value.accountName,
     },
     {
       field: "category",
       headerName: "Category",
       flex: 1,
       type: "singleSelect",
-      valueOptions: categories.map((obj) => obj.name),
+      valueOptions: categories?.map((obj) => obj.name),
     },
     {
       field: "value",

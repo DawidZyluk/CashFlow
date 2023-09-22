@@ -10,7 +10,12 @@ const AccountButon = ({account}) => {
         flexDirection: "column",
         alignItems: "start",
         mr: 1.5,
-        width: '9rem'
+        width: '9rem',
+        color: 'white',
+        bgcolor: account.color,
+        "&:hover": {
+          bgcolor: `${account.color}DD`
+        }
       }}
       key={account._id}
     >

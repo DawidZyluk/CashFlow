@@ -47,7 +47,7 @@ const GroupedEntries = () => {
     }
     setEntriesState(groupedEntries);
     dispatch(setEntries({ entries: data?.entries }));
-    console.log(data?.entries[0])
+    //console.log(data?.entries[0])
   }, [data, entries]);
 
   return (

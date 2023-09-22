@@ -70,7 +70,7 @@ export default function AddAccount() {
 
   const handleSubmit = async (values, onSubmitProps) => {
     try {
-      const res = await addAccount(values).unwrap();
+      const res = await addAccount({...values, color}).unwrap();
       dispatch(setAccounts({ accounts: [...accounts, res] }));
       onSubmitProps.resetForm();
       setOpen(false);
@@ -92,7 +92,7 @@ export default function AddAccount() {
     accountName: "",
     accountNumber: "",
     accountType: "cash",
-    balance: "",
+    balance: 0,
   };
 
   return (

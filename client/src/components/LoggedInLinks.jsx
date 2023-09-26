@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLogoutMutation } from "../store/usersApiSlice";
 import { setLogout } from "../store/authSlice";
 import { useDispatch } from "react-redux";

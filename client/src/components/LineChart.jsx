@@ -1,113 +1,60 @@
 import { Card, Typography } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
 import { useGetEntriesQuery } from "../store/entriesApiSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { setEntries } from "../store/authSlice";
+import {  useMemo,  } from "react";
+
 import dayjs from "dayjs";
 
-const dummyData = [
-  {
-    id: "japan",
-    color: "hsl(23, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 9,
-      },
-      {
-        x: "helicopter",
-        y: 298,
-      },
-      {
-        x: "boat",
-        y: 190,
-      },
-      {
-        x: "train",
-        y: 38,
-      },
-      {
-        x: "subway",
-        y: 176,
-      },
-      {
-        x: "bus",
-        y: 244,
-      },
-      {
-        x: "car",
-        y: 107,
-      },
-      {
-        x: "moto",
-        y: 82,
-      },
-      {
-        x: "bicycle",
-        y: 211,
-      },
-      {
-        x: "horse",
-        y: 203,
-      },
-      {
-        x: "skateboard",
-        y: 103,
-      },
-      {
-        x: "others",
-        y: 104,
-      },
-    ],
-  },
-];
 
 export const LineChart = () => {
-  const { data, refetch } = useGetEntriesQuery();
-  const dispatch = useDispatch();
-  const entries = useSelector((state) => state.auth.entries);
-  const [entriesState, setEntriesState] = useState({});
+  const { data } = useGetEntriesQuery();
 
-  useEffect(() => {
-    refetch();
+  const entriesState = useMemo(() => {
+    if (!data)
+      return [
+        {
+          id: "Overall",
+          color: "hsl(23, 70%, 50%)",
+          data: [],
+        },
+      ];
+
     let sortedEntries;
     let groupedEntries = [];
-    if (data) {
-      sortedEntries = [...data.entries];
-      sortedEntries.sort(function (a, b) {
-        return new Date(b.date) + new Date(a.date);
-      });
 
-      for (let entry of sortedEntries) {
-        const key = entry.date.split("T")[0];
-        if (!groupedEntries[key]) {
-          groupedEntries[key] = {
-            total: entry.value,
-            entries: [entry],
-          };
-        } else {
-          groupedEntries[key].total += entry.value;
-          groupedEntries[key].entries.push(entry);
-        }
-      }
+    sortedEntries = [...data.entries];
+    sortedEntries.sort(function (a, b) {
+      return new Date(b.date) + new Date(a.date);
+    });
 
-      groupedEntries = Object.keys(groupedEntries).map((date) => {
-        return {
-          x: date,
-          y: groupedEntries[date].total,
+    for (let entry of sortedEntries) {
+      const key = entry.date.split("T")[0];
+      if (!groupedEntries[key]) {
+        groupedEntries[key] = {
+          total: entry.value,
+          entries: [entry],
         };
-      });
+      } else {
+        groupedEntries[key].total += entry.value;
+        groupedEntries[key].entries.push(entry);
+      }
     }
-    setEntriesState([
+
+    groupedEntries = Object.keys(groupedEntries).map((date) => {
+      return {
+        x: date,
+        y: groupedEntries[date].total,
+      };
+    });
+
+    return [
       {
         id: "Overall",
         color: "hsl(23, 70%, 50%)",
         data: groupedEntries,
       },
-    ]);
-    dispatch(setEntries({ entries: data?.entries }));
-  }, [data, entries]);
+    ];
+  });
 
   return (
     <Card sx={{ p: 2, my: 1, height: "500px" }}>

@@ -20,6 +20,7 @@
     "express-rate-limit": "^6.9.0",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",
+    "lorem-ipsum": "^2.0.8",
     "mongoose": "^7.4.2",
     "nodemailer": "^6.9.4"
   }

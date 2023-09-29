@@ -17,5 +17,5 @@ export default function useDialog(initialIsVisible) {
     };
   }, []);
 
-  return { ref, isDialogOpen, setIsDialogOpen };
+  return [ref, isDialogOpen, setIsDialogOpen];
 }

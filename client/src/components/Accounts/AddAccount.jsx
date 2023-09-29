@@ -30,7 +30,7 @@ import { adjustFontColor } from "../../utils/adjustFontColor";
 
 export default function AddAccount() {
   const [open, setOpen] = useState(false);
-  const { ref, isDialogOpen, setIsDialogOpen } = useDialog(false);
+  const [ ref, isDialogOpen, setIsDialogOpen ] = useDialog(false);
   const [color, setColor] = useState("#0b8043");
   const [addAccount, { error }] = useAddAccountMutation();
   const theme = useTheme();

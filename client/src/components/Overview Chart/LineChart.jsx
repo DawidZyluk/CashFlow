@@ -1,13 +1,27 @@
-import { Card, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
 import { useGetEntriesQuery } from "../../store/entriesApiSlice";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 import dayjs from "dayjs";
 import { groupByDate } from "./sortingFunctions";
+import useDialog from "../../hooks/useDialog";
+import YearPicker from "./YearPicker";
+import MonthPicker from "./MonthPicker";
 
 export const LineChart = () => {
   const { data } = useGetEntriesQuery();
+  const [year, setYear] = useState("All");
+  const [month, setMonth] = useState("All");
 
   const entriesState = useMemo(() => {
     if (!data)
@@ -24,9 +38,23 @@ export const LineChart = () => {
 
   return (
     <Card sx={{ p: 2, my: 1, height: "500px" }}>
-      <Typography sx={{ my: 0 }} variant="h5">
-        Overview Chart
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Typography sx={{ my: 0 }} variant="h5">
+          Overview Chart
+        </Typography>
+        <FiberManualRecordIcon
+          sx={{ fontSize: 12, color: "lightgray", mx: 1 }}
+        />
+        <YearPicker year={year} setMonth={setMonth} setYear={setYear} />
+        {year !== "All" && (
+          <>
+            <FiberManualRecordIcon
+              sx={{ fontSize: 12, color: "lightgray", mx: 1 }}
+            />
+            <MonthPicker month={month} setMonth={setMonth} />
+          </>
+        )}
+      </Box>
       <ResponsiveLine
         data={entriesState}
         margin={{ top: 50, right: 90, bottom: 70, left: 60 }}

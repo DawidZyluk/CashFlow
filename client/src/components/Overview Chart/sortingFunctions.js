@@ -1,4 +1,5 @@
 export function groupByDate(entries) {
+  console.log(entries.length);
   let sortedEntries;
   let groupedEntries = [];
 
@@ -19,19 +20,31 @@ export function groupByDate(entries) {
       groupedEntries[key].entries.push(entry);
     }
   }
-  let sum = 0
+  let sum = 0;
   groupedEntries = Object.keys(groupedEntries).map((date) => {
     return {
       x: date,
-      y: sum += groupedEntries[date].total,
+      y: (sum += groupedEntries[date].total),
     };
   });
 
+  let bundleSize = 40;
+  let res = [];
+  if (groupedEntries.length > 1200) {
+    for (let i = 0; i < groupedEntries.length; i += bundleSize) {
+      const slice = groupedEntries.slice(i, i + bundleSize);
+      res.push({
+        x: slice[slice.length-1].x,
+        y: slice[slice.length-1].y
+      });
+    }
+  }
+  //console.log(res)
   return [
     {
       id: "Overall",
       color: "hsl(23, 70%, 50%)",
-      data: groupedEntries,
+      data: res,
     },
   ];
 }

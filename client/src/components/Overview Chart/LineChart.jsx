@@ -19,9 +19,11 @@ import YearPicker from "./YearPicker";
 import MonthPicker from "./MonthPicker";
 
 export const LineChart = () => {
-  const { data } = useGetEntriesQuery();
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
+  
+  const { data } = useGetEntriesQuery({year, month});
+
 
   const entriesState = useMemo(() => {
     if (!data)

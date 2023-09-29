@@ -1,6 +1,7 @@
 import Account from "../models/accountModel.js";
 import Entry from "../models/entryModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import dayjs from "dayjs";
 
 export const addEntry = asyncHandler(async (req, res) => {
   const { accountId, date, value, category, note } = req.body;
@@ -11,10 +12,10 @@ export const addEntry = asyncHandler(async (req, res) => {
     value,
     accountId,
     category,
-    note
+    note,
   });
 
-  const account = await Account.findOne({_id: accountId});
+  const account = await Account.findOne({ _id: accountId });
   account.balance += value;
   account.save();
 
@@ -35,7 +36,36 @@ export const addEntry = asyncHandler(async (req, res) => {
 
 export const getEntries = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const entries = await Entry.find({ userId }).select(" -__v").populate('accountId', 'accountName')
+  const { year, month } = req.params;
+  let entries;
+
+  if (year !== "All" && month !== "All") {
+    const date = dayjs(`${year}, ${month}`);
+    entries = await Entry.find({
+      userId,
+      date: {
+        $gte: date.format(),
+        $lt: dayjs(`${year}, ${dayjs(date).month() + 2}`).format(),
+      },
+    })
+      .select(" -__v")
+      .populate("accountId", "accountName");
+  } else if (year !== "All") {
+    entries = await Entry.find({
+      userId,
+      date: {
+        $gte: new Date(year).toISOString(),
+        $lt: new Date(year, 12, 1, 1).toISOString(),
+      },
+    })
+      .select(" -__v")
+      .populate("accountId", "accountName");
+  } else {
+    entries = await Entry.find({ userId })
+      .select(" -__v")
+      .populate("accountId", "accountName");
+  }
+
   //const entries = await Entry.find({ userId }).sort('-updatedAt').limit(10).select("-createdAt -updatedAt -__v")
   res.status(201).json({
     entries,

@@ -134,21 +134,6 @@ function randomAccountName() {
   return `${randomAdjective} ${randomNoun}`;
 }
 
-const User = {
-  _id: "6512c2cbd9fa5c0d9b1c3016",
-  verified: true,
-  name: "John Doe",
-  email: "user@email.com",
-  password: "$2a$12$m9f.9cCksxluZnJhQ/tb..Hq8QfVZhrSjsx0Pvjf264h0.xGTdfHy", // password
-  createdAt: {
-    $date: "2023-08-29T15:18:19.711Z",
-  },
-  updatedAt: {
-    $date: "2023-09-06T09:16:01.412Z",
-  },
-  __v: 1,
-};
-
 const categories = [
   "Salary",
   "Freelance Income",
@@ -206,8 +191,17 @@ const entries = {
 const file = fs.createWriteStream(__dirname + "/data.js");
 const accountIds = [];
 
+file.write(
+  `export const User = {
+    _id: "6512c2cbd9fa5c0d9b1c3016",
+    verified: true,
+    name: "John Doe",
+    email: "user@email.com",
+    password: "password",
+  };`
+);
 file.write("export const accounts = [");
-for (let i = 1; i <= 4; i++) {
+for (let i = 1; i <= 40; i++) {
   const currId = genId();
   accountIds.push(currId);
   file.write(
@@ -227,7 +221,7 @@ for (let i = 1; i <= 4; i++) {
 file.write("];");
 
 file.write("export const entries = [");
-for (let i = 1; i <= 10; i++) {
+for (let i = 1; i <= 3000; i++) {
   const currId = arrayRand(accountIds);
   file.write(
     `{

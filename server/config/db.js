@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import Account from "../models/accountModel.js";
 import Entry from "../models/entryModel.js";
-import { accounts, entries } from "../data/data.js";
+import UserModel from "../models/userModel.js";
+import { User, accounts, entries } from "../data/data.js";
 
 export const connectDB = async () => {
   try {
@@ -10,6 +11,7 @@ export const connectDB = async () => {
 
     // console.log("Seeding database...")
     // Account.insertMany(accounts)
+    // UserModel.create(User);
     // Entry.insertMany(entries)
     // console.log("Database has beed seeded.")
 

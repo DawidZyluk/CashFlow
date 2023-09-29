@@ -1,10 +1,10 @@
 import { Card, Typography } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
-import { useGetEntriesQuery } from "../store/entriesApiSlice";
-import {  useMemo,  } from "react";
+import { useGetEntriesQuery } from "../../store/entriesApiSlice";
+import { useMemo } from "react";
 
 import dayjs from "dayjs";
-
+import { groupByDate } from "./sortingFunctions";
 
 export const LineChart = () => {
   const { data } = useGetEntriesQuery();
@@ -19,41 +19,7 @@ export const LineChart = () => {
         },
       ];
 
-    let sortedEntries;
-    let groupedEntries = [];
-
-    sortedEntries = [...data.entries];
-    sortedEntries.sort(function (a, b) {
-      return new Date(b.date) + new Date(a.date);
-    });
-
-    for (let entry of sortedEntries) {
-      const key = entry.date.split("T")[0];
-      if (!groupedEntries[key]) {
-        groupedEntries[key] = {
-          total: entry.value,
-          entries: [entry],
-        };
-      } else {
-        groupedEntries[key].total += entry.value;
-        groupedEntries[key].entries.push(entry);
-      }
-    }
-
-    groupedEntries = Object.keys(groupedEntries).map((date) => {
-      return {
-        x: date,
-        y: groupedEntries[date].total,
-      };
-    });
-
-    return [
-      {
-        id: "Overall",
-        color: "hsl(23, 70%, 50%)",
-        data: groupedEntries,
-      },
-    ];
+    return groupByDate(data.entries);
   });
 
   return (
@@ -96,7 +62,7 @@ export const LineChart = () => {
           legendOffset: -55,
           legendPosition: "middle",
         }}
-        colors={{ scheme: "nivo" }}
+        //colors={{ scheme: "nivo" }}
         pointSize={8}
         pointColor="white"
         pointBorderWidth={2}

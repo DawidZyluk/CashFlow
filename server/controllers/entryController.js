@@ -17,6 +17,7 @@ export const addEntry = asyncHandler(async (req, res) => {
   });
 
   const account = await Account.findOne({ _id: accountId });
+  const { accountName } = account;
   account.balance += value;
   account.save();
 
@@ -24,17 +25,17 @@ export const addEntry = asyncHandler(async (req, res) => {
   const month = dayjs(date).format("MMMM");
   const day = dayjs(date).format("DD/MM/YYYY");
   const stats = await OverallStats.findOne({ userId, year });
-  //console.log(day);
+
   if (!stats) {
     await OverallStats.create({
       userId,
       year,
       totalBalance: value,
-      accounts: { [account.accountName]: value },
+      accounts: { [accountName]: value },
       monthlyData: {
         [month]: {
           totalBalance: value,
-          accounts: { [account.accountName]: value },
+          accounts: { [accountName]: value },
         },
       },
       dailyData: {
@@ -43,22 +44,33 @@ export const addEntry = asyncHandler(async (req, res) => {
     });
   } else {
     let { accounts, monthlyData, dailyData } = stats;
+    const currAccount = accounts.get(accountName);
+    const currMonth = monthlyData.get(month);
     stats.totalBalance += value;
-    if (accounts.get(account.accountName)) accounts.set(account.accountName, accounts.get(account.accountName) + value);
-    else accounts.set(account.accountName, value) 
-    if (monthlyData.get(month)) {
-      monthlyData.get(month).totalBalance += value
-      if(monthlyData.get(month).accounts.get(account.accountName)){
-        monthlyData.get(month).accounts.set(account.accountName, monthlyData.get(month).accounts.get(account.accountName) + value)
-      } else  monthlyData.get(month).accounts.set(account.accountName, value);
+    if (currAccount)
+      accounts.set(
+        accountName,
+        currAccount + value
+      );
+    else accounts.set(accountName, value);
+    if (currMonth) {
+      currMonth.totalBalance += value;
+      if (currMonth.accounts.get(accountName)) {
+        monthlyData
+          .get(month)
+          .accounts.set(
+            accountName,
+            currMonth.accounts.get(accountName) + value
+          );
+      } else currMonth.accounts.set(accountName, value);
     } else {
       monthlyData.set(month, {
         totalBalance: value,
-        accounts: { [account.accountName]: value },
-      })
+        accounts: { [accountName]: value },
+      });
     }
     if (dailyData.get(day)) dailyData.set(day, dailyData.get(day) + value);
-    else dailyData.set(day, value)
+    else dailyData.set(day, value);
     stats.save();
   }
 

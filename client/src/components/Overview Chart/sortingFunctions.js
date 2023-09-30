@@ -1,5 +1,4 @@
 export function groupByDate(entries) {
-  console.log(entries.length);
   let sortedEntries;
   let groupedEntries = [];
 
@@ -44,7 +43,7 @@ export function groupByDate(entries) {
     {
       id: "Overall",
       color: "hsl(23, 70%, 50%)",
-      data: res,
+      data: groupedEntries,
     },
   ];
 }

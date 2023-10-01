@@ -115,7 +115,7 @@ function arrayRand(arr) {
 }
 
 function randomDate(
-  start = new Date(2020, 0, 1),
+  start = new Date(2023, 5, 1),
   end = new Date(),
   startHour = 0,
   endHour = 24
@@ -201,7 +201,7 @@ file.write(
   };`
 );
 file.write("export const accounts = [");
-for (let i = 1; i <= 40; i++) {
+for (let i = 1; i <= 4; i++) {
   const currId = genId();
   accountIds.push(currId);
   file.write(
@@ -221,7 +221,7 @@ for (let i = 1; i <= 40; i++) {
 file.write("];");
 
 file.write("export const entries = [");
-for (let i = 1; i <= 3000; i++) {
+for (let i = 1; i <= 70; i++) {
   const currId = arrayRand(accountIds);
   file.write(
     `{

@@ -12,6 +12,7 @@ const AccountsList = () => {
   const accounts = useSelector((state) => state.auth.accounts);
 
   useEffect(() => {
+    refetch();
     dispatch(setAccounts({ ...data }));
   }, [data, accounts]);
 

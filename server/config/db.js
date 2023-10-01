@@ -9,9 +9,12 @@ export const connectDB = async () => {
     const connection = await mongoose.connect(process.env.MONGO_URI);
     console.log(`MongoDB Connected: ${connection.connection.host}`)
 
+
     // console.log("Seeding database...")
+    // Entry.collection.drop()
+    // Account.collection.drop()
     // Account.insertMany(accounts)
-    // UserModel.create(User);
+    // //UserModel.create(User);
     // Entry.insertMany(entries)
     // console.log("Database has beed seeded.")
 

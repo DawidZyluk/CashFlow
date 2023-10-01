@@ -1,5 +1,5 @@
 # CashFlow - Money tracking app [Work in Progress]
-![image](https://github.com/DawidZyluk/CashFlow/assets/91137753/5d59b54e-c4eb-4046-8a58-6d6413fbf662)
+![image](https://github.com/DawidZyluk/CashFlow/assets/91137753/6152c329-1400-4034-a138-5c9febfe6bb4)
 Welcome to the CashFlow! A robust money tracking system built on the MongoDB, Express, React, and Node.js stack. It utilizes JWT stored in HTTP-Only cookies for secure user money tracking. The backend integrates joi validation to ensure data integrity. On the frontend, Formik and Yup streamline form validation, while Redux Toolkit manages state with efficiency. Redux Toolkit Query simplifies data fetching, and MaterialUI enhances the user interface.
 
 ## Features

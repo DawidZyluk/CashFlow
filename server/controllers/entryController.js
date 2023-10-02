@@ -1,4 +1,4 @@
-import OverallStats from "../models/OverallStats.js";
+import OverallStats from "../models/overallStatsModel.js";
 import Account from "../models/accountModel.js";
 import Entry from "../models/entryModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";

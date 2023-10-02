@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import Account from "../models/accountModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import OverallStats from "../models/OverallStats.js";
+import OverallStats from "../models/overallStatsModel.js";
 
 export const addAccount = asyncHandler(async (req, res) => {
   const { accountName, accountNumber, accountType, balance, color } = req.body;

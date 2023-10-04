@@ -173,6 +173,7 @@ const accountTypes = [
 
 const file = fs.createWriteStream(__dirname + "/data.js");
 const accounts = [];
+const entries = [];
 const overallStats = [];
 
 file.write(
@@ -189,10 +190,11 @@ file.write("export const accounts = [");
 for (let i = 1; i <= 4; i++) {
   const currId = genId();
   const accountName = randomAccountName();
-  accounts.push({id: currId, name: accountName});
+  accounts.push({ id: currId, name: accountName });
   const accountNumber = Math.random() > 0.5 ? genId() : "";
   const accountType = arrayRand(accountTypes);
-  const balance = Math.random() > 0.5 ? parseFloat(rand(100, 2000).toFixed(2)) : 0;
+  const balance =
+    Math.random() > 0.5 ? parseFloat(rand(100, 2000).toFixed(2)) : 0;
   const createdAt = randomDate();
   const updatedAt = randomDate();
   const color = arrayRand(colors);
@@ -211,9 +213,23 @@ for (let i = 1; i <= 4; i++) {
     },`
   );
 
+  if (balance) {
+    entries.push({
+      _id: genId(),
+      userId: "6512c2cbd9fa5c0d9b1c3016",
+      accountId: currId,
+      date: createdAt,
+      value: balance,
+      category: "Initial Balance",
+      note: "Account Initialization",
+      createdAt: createdAt,
+      updatedAt: createdAt,
+    });
+  }
+
   const year = dayjs(createdAt).year();
-  const month = dayjs(createdAt).format('MMMM');
-  let stats = overallStats.find(stat => stat.year === year);
+  const month = dayjs(createdAt).format("MMMM");
+  let stats = overallStats.find((stat) => stat.year === year);
   if (!stats) {
     stats = {
       userId: "6512c2cbd9fa5c0d9b1c3016",
@@ -237,34 +253,32 @@ for (let i = 1; i <= 4; i++) {
   }
 
   stats.monthlyData[month].totalBalance += balance;
-  stats.monthlyData[month].accounts[accountName] = (stats.monthlyData[month].accounts[accountName] || 0) + balance;
-  
+  stats.monthlyData[month].accounts[accountName] =
+    (stats.monthlyData[month].accounts[accountName] || 0) + balance;
 }
 file.write("];");
 
-file.write("export const entries = [");
 for (let i = 1; i <= 10; i++) {
   const randAccount = arrayRand(accounts);
   const date = randomDate();
   const value = parseFloat(rand(-50, 500).toFixed(2));
-  file.write(
-    `{
-      _id: "${genId()}",
-      userId: "6512c2cbd9fa5c0d9b1c3016",
-      accountId: "${randAccount.id}",
-      date: "${date}",
-      value: ${value},
-      category: "${arrayRand(categories)}",
-      note: "${Math.random() > 0.5 ? lorem.generateSentences(1) : ""}",
-      createdAt: "${randomDate()}",
-      updatedAt: "${randomDate()}",
-    },`
-  );
+
+  entries.push({
+    _id: genId(),
+    userId: "6512c2cbd9fa5c0d9b1c3016",
+    accountId: randAccount.id,
+    date: date,
+    value: value,
+    category: arrayRand(categories),
+    note: Math.random() > 0.5 ? lorem.generateSentences(1) : "",
+    createdAt: randomDate(),
+    updatedAt: randomDate(),
+  });
 
   const year = dayjs(date).year();
-  const month = dayjs(date).format('MMMM');
-  const day = dayjs(date).format('DD/MM/YYYY');
-  let stats = overallStats.find(stat => stat.year === year);
+  const month = dayjs(date).format("MMMM");
+  const day = dayjs(date).format("DD/MM/YYYY");
+  let stats = overallStats.find((stat) => stat.year === year);
   if (!stats) {
     stats = {
       userId: "6512c2cbd9fa5c0d9b1c3016",
@@ -278,7 +292,8 @@ for (let i = 1; i <= 10; i++) {
   }
 
   stats.totalBalance += value;
-  stats.accounts[randAccount.name] = (stats.accounts[randAccount.name] || 0) + value;
+  stats.accounts[randAccount.name] =
+    (stats.accounts[randAccount.name] || 0) + value;
 
   if (!stats.monthlyData[month]) {
     stats.monthlyData[month] = {
@@ -288,14 +303,18 @@ for (let i = 1; i <= 10; i++) {
   }
 
   stats.monthlyData[month].totalBalance += value;
-  stats.monthlyData[month].accounts[randAccount.name] = (stats.monthlyData[month].accounts[randAccount.name] || 0) + value;
+  stats.monthlyData[month].accounts[randAccount.name] =
+    (stats.monthlyData[month].accounts[randAccount.name] || 0) + value;
 
   stats.dailyData[day] = (stats.dailyData[day] || 0) + value;
 }
+
+file.write("export const entries = [");
+for (let entry of entries) file.write(JSON.stringify(entry) + ",");
 file.write("];");
 
 file.write("export const overallStats = [");
-for(let stat of overallStats) file.write(JSON.stringify(stat) + ",");
+for (let stat of overallStats) file.write(JSON.stringify(stat) + ",");
 file.write("];");
 
 file.close();

@@ -119,6 +119,7 @@ export const getEntries = asyncHandler(async (req, res) => {
     entries = await Entry.find({ userId })
       .select(" -__v")
       .populate("accountId", "accountName");
+      OverallStats.find()
   }
 
   //const entries = await Entry.find({ userId }).sort('-updatedAt').limit(10).select("-createdAt -updatedAt -__v")

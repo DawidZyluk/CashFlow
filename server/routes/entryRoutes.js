@@ -6,6 +6,6 @@ import { addEntrySchema } from '../validators/entryValidators/addEntryValidator.
 import { protect } from '../middleware/authMiddleware.js';
 
 router.post('/addEntry', protect, validator(addEntrySchema), addEntry)
-router.get('/getEntries/:year/:month', protect, getEntries)
+router.get('/getEntries', protect, getEntries)
 
 export default router;

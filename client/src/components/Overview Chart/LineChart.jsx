@@ -8,24 +8,49 @@ import {
   Typography,
 } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
-import { useGetEntriesQuery } from "../../store/entriesApiSlice";
+
 import { useMemo, useState } from "react";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 import dayjs from "dayjs";
-import { groupByDate } from "./sortingFunctions";
-import useDialog from "../../hooks/useDialog";
+import {
+  calculateBalance,
+  formatData,
+  getData,
+  sortStats,
+} from "./sortingFunctions";
 import YearPicker from "./YearPicker";
 import MonthPicker from "./MonthPicker";
+import { useGetStatsQuery } from "../../store/statsApiSlice";
 
 export const LineChart = () => {
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
-  
-  const { data } = useGetEntriesQuery({year, month});
 
+  const { data } = useGetStatsQuery();
+  let availableYears = [];
+  let chartData = [];
 
-  const entriesState = useMemo(() => {
+  if (data) {
+    const [mergedDays, sortedStats] = sortStats(data.stats);
+    const years = sortedStats.map((stat) => stat.year);
+    availableYears = years;
+
+    if (year !== "All" && month !== "All") {
+      let sum = calculateBalance(sortedStats, year, month);
+      const monthData = getData(sortedStats, year, month);
+      chartData = formatData(monthData, sum);
+    } else if (year !== "All") {
+      let sum = calculateBalance(sortedStats, year, month);
+      const yearData = getData(sortedStats, year, month);
+      chartData = formatData(yearData, sum);
+    } else {
+      let sum = 0;
+      chartData = formatData(Object.entries(mergedDays), sum);
+    }
+  }
+
+  const chartState = useMemo(() => {
     if (!data)
       return [
         {
@@ -35,7 +60,13 @@ export const LineChart = () => {
         },
       ];
 
-    return groupByDate(data.entries);
+    return [
+      {
+        id: "Overall",
+        color: "hsl(23, 70%, 50%)",
+        data: chartData,
+      },
+    ];
   });
 
   return (
@@ -47,7 +78,12 @@ export const LineChart = () => {
         <FiberManualRecordIcon
           sx={{ fontSize: 12, color: "lightgray", mx: 1 }}
         />
-        <YearPicker year={year} setMonth={setMonth} setYear={setYear} />
+        <YearPicker
+          availableYears={availableYears}
+          year={year}
+          setMonth={setMonth}
+          setYear={setYear}
+        />
         {year !== "All" && (
           <>
             <FiberManualRecordIcon
@@ -58,7 +94,8 @@ export const LineChart = () => {
         )}
       </Box>
       <ResponsiveLine
-        data={entriesState}
+        data={chartState}
+        colors={{ datum: 'color' }}
         margin={{ top: 50, right: 90, bottom: 70, left: 60 }}
         xScale={{ type: "point" }}
         yScale={{
@@ -74,7 +111,7 @@ export const LineChart = () => {
         axisRight={null}
         axisBottom={{
           format: (date) => {
-            return dayjs(date).format("DD/MM");
+            return dayjs(date, "DD/MM/YYYY").format("DD/MM");
           },
           tickSize: 5,
           tickPadding: 5,
@@ -92,7 +129,6 @@ export const LineChart = () => {
           legendOffset: -55,
           legendPosition: "middle",
         }}
-        //colors={{ scheme: "nivo" }}
         pointSize={8}
         pointColor="white"
         pointBorderWidth={2}

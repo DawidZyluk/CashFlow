@@ -34,7 +34,7 @@ function EditToolbar() {
 }
 
 export default function RecentEntries() {
-  const { data, refetch, isFetching } = useGetEntriesQuery({year: 'All', month: 'All'});
+  const { data, refetch, isFetching } = useGetEntriesQuery();
   const dispatch = useDispatch();
   const entries = useSelector((state) => state.auth.entries);
   const accounts = useSelector((state) => state.auth.accounts);

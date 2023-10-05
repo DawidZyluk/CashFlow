@@ -47,11 +47,7 @@ export const addEntry = asyncHandler(async (req, res) => {
     const currAccount = accounts.get(accountName);
     const currMonth = monthlyData.get(month);
     stats.totalBalance += value;
-    if (currAccount)
-      accounts.set(
-        accountName,
-        currAccount + value
-      );
+    if (currAccount) accounts.set(accountName, currAccount + value);
     else accounts.set(accountName, value);
     if (currMonth) {
       currMonth.totalBalance += value;
@@ -91,38 +87,11 @@ export const addEntry = asyncHandler(async (req, res) => {
 
 export const getEntries = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { year, month } = req.params;
-  let entries;
 
-  if (year !== "All" && month !== "All") {
-    const date = dayjs(`${year}, ${month}`);
-    entries = await Entry.find({
-      userId,
-      date: {
-        $gte: date.format(),
-        $lt: dayjs(`${year}, ${dayjs(date).month() + 2}`).format(),
-      },
-    })
-      .select(" -__v")
-      .populate("accountId", "accountName");
-  } else if (year !== "All") {
-    entries = await Entry.find({
-      userId,
-      date: {
-        $gte: new Date(year).toISOString(),
-        $lt: new Date(year, 12, 1, 1).toISOString(),
-      },
-    })
-      .select(" -__v")
-      .populate("accountId", "accountName");
-  } else {
-    entries = await Entry.find({ userId })
-      .select(" -__v")
-      .populate("accountId", "accountName");
-      OverallStats.find()
-  }
+  let entries = await Entry.find({ userId })
+    .select(" -__v")
+    .populate("accountId", "accountName");
 
-  //const entries = await Entry.find({ userId }).sort('-updatedAt').limit(10).select("-createdAt -updatedAt -__v")
   res.status(201).json({
     entries,
   });

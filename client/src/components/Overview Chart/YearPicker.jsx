@@ -2,11 +2,10 @@ import { Box, Card, Typography } from "@mui/material";
 import React from "react";
 import useDialog from "../../hooks/useDialog";
 
-const YearPicker = ({ year, setMonth, setYear }) => {
+const YearPicker = ({ availableYears, year, setMonth, setYear }) => {
   const [yearRef, isYearDialogOpen, setIsYearDialogOpen] = useDialog(false);
 
-  const years = ["All", 2023, 2022, 2021, 2020];
-
+  const years = ["All", ...availableYears];
   const handleYearChange = (year) => {
     if(year === "All") setMonth("All")
     setYear(year);

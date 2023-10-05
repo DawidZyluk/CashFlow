@@ -5,6 +5,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
@@ -22,14 +23,20 @@ import {
 import YearPicker from "./YearPicker";
 import MonthPicker from "./MonthPicker";
 import { useGetStatsQuery } from "../../store/statsApiSlice";
+import StepPicker from "./StepPicker";
+import { useTheme } from "@emotion/react";
 
 export const LineChart = () => {
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
+  const [step, setStep] = useState(1);
+  const theme = useTheme();
 
   const { data } = useGetStatsQuery();
   let availableYears = [];
   let chartData = [];
+  let areaBaseline = 0;
+  let chartWidth = 0;
 
   if (data) {
     const [mergedDays, sortedStats] = sortStats(data.stats);
@@ -39,14 +46,21 @@ export const LineChart = () => {
     if (year !== "All" && month !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const monthData = getData(sortedStats, year, month);
+      areaBaseline = sum + monthData[0][1];
       chartData = formatData(monthData, sum);
+      chartWidth = 1120;
     } else if (year !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const yearData = getData(sortedStats, year, month);
-      chartData = formatData(yearData, sum);
+      areaBaseline = sum + yearData[0][1];
+      chartData = formatData(yearData, sum, step);
+      chartWidth = chartData.length * 40;
     } else {
       let sum = 0;
-      chartData = formatData(Object.entries(mergedDays), sum);
+      areaBaseline = sum;
+      chartData = formatData(Object.entries(mergedDays), sum, step);
+      console.log(chartData.length);
+      chartWidth = chartData.length * 40;
     }
   }
 
@@ -55,7 +69,7 @@ export const LineChart = () => {
       return [
         {
           id: "Overall",
-          color: "hsl(23, 70%, 50%)",
+          color: theme.palette.gold[300],
           data: [],
         },
       ];
@@ -63,7 +77,7 @@ export const LineChart = () => {
     return [
       {
         id: "Overall",
-        color: "hsl(23, 70%, 50%)",
+        color: theme.palette.gold[400],
         data: chartData,
       },
     ];
@@ -92,77 +106,57 @@ export const LineChart = () => {
             <MonthPicker month={month} setMonth={setMonth} />
           </>
         )}
+        {(year === "All" || month === "All") && <StepPicker step={step} setStep={setStep}/>}
       </Box>
-      <ResponsiveLine
-        data={chartState}
-        colors={{ datum: 'color' }}
-        margin={{ top: 50, right: 90, bottom: 70, left: 60 }}
-        xScale={{ type: "point" }}
-        yScale={{
-          type: "linear",
-          min: "auto",
-          max: "auto",
-          stacked: true,
-          reverse: false,
-        }}
-        yFormat=" >-.2f"
-        curve="catmullRom"
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-          format: (date) => {
-            return dayjs(date, "DD/MM/YYYY").format("DD/MM");
-          },
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "date",
-          legendOffset: 36,
-          legendPosition: "middle",
-        }}
-        axisLeft={{
-          orient: "left",
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "value",
-          legendOffset: -55,
-          legendPosition: "middle",
-        }}
-        pointSize={8}
-        pointColor="white"
-        pointBorderWidth={2}
-        pointBorderColor={{ from: "serieColor", modifiers: [] }}
-        pointLabelYOffset={-12}
-        enableArea={true}
-        useMesh={true}
-        legends={[
-          {
-            anchor: "bottom-right",
-            direction: "column",
-            justify: false,
-            translateX: 100,
-            translateY: 0,
-            itemsSpacing: 0,
-            itemDirection: "left-to-right",
-            itemWidth: 80,
-            itemHeight: 20,
-            itemOpacity: 0.75,
-            symbolSize: 12,
-            symbolShape: "circle",
-            symbolBorderColor: "rgba(0, 0, 0, .5)",
-            effects: [
-              {
-                on: "hover",
-                style: {
-                  itemBackground: "rgba(0, 0, 0, .03)",
-                  itemOpacity: 1,
-                },
+      <Box sx={{ height: "430px", width: "100%", overflowX: "auto" }}>
+        <Box sx={{ height: "400px", width: chartWidth, minWidth: 1100 }}>
+          <ResponsiveLine
+            data={chartState}
+            colors={{ datum: "color" }}
+            margin={{ top: 40, right: 40, bottom: 30, left: 70 }}
+            xScale={{ type: "point" }}
+            yScale={{
+              type: "linear",
+              min: "auto",
+              max: "auto",
+              stacked: true,
+              reverse: false,
+            }}
+            yFormat=" >-.2f"
+            curve="catmullRom"
+            axisTop={null}
+            axisRight={null}
+            axisBottom={{
+              format: (date) => {
+                return dayjs(date, "DD/MM/YYYY").format("DD/MM");
               },
-            ],
-          },
-        ]}
-      />
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              //legend: "date",
+              legendOffset: 36,
+              legendPosition: "middle",
+            }}
+            axisLeft={{
+              orient: "left",
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              //legend: "value",
+              legendOffset: -60,
+              legendPosition: "middle",
+            }}
+            pointSize={8}
+            pointColor="white"
+            pointBorderWidth={2}
+            pointBorderColor={{ from: "serieColor", modifiers: [] }}
+            pointLabelYOffset={-12}
+            enableArea={true}
+            areaBaselineValue={areaBaseline}
+            useMesh={true}
+          />
+        </Box>
+      </Box>
     </Card>
   );
 };

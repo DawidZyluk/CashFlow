@@ -149,12 +149,23 @@ export function getData(sortedStats, year, month) {
   return res;
 }
 
-export function formatData(data, sum) {
-  const formatedData = data.map(([date, value]) => {
+export function formatData(data, sum, step = 1) {
+  let formatedData = data.map(([date, value], i) => {
     return {
       x: date,
       y: (sum += value),
     };
   });
+
+  if (step !== 1) {
+    let withStep = [];
+    for (let i = 0; i < formatedData.length; i++) {
+      if (i % step == 0) {
+        withStep.push({ x: formatedData[i].x, y: formatedData[i].y });
+      }
+    }
+    formatedData = withStep;
+  }
+
   return formatedData;
 }

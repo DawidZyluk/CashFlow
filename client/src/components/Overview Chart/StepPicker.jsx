@@ -2,8 +2,8 @@ import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const StepPicker = ({ step, setStep }) => {
-  const [query, setQuery] = useState(1);
-
+  const [query, setQuery] = useState(step);
+  setStep(step)
   const styles = {
     input: {
       width: "43px",
@@ -30,7 +30,7 @@ const StepPicker = ({ step, setStep }) => {
   }, [query]);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", ml: 'auto' }}>
+    <Box sx={{ display: "flex", alignItems: "center" }}>
       <Typography  sx={{ pr: .4 }}>
         Step:
       </Typography>

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 import dayjs from "dayjs";
@@ -29,6 +29,7 @@ import { useTheme } from "@emotion/react";
 export const LineChart = () => {
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
+  const [isStepOpen, setIsStepOpen] = useState(false);
   const [step, setStep] = useState(1);
   const theme = useTheme();
 
@@ -37,9 +38,11 @@ export const LineChart = () => {
   let chartData = [];
   let areaBaseline = 0;
   let chartWidth = 0;
+  let newStep = 1;
 
   if (data) {
     const [mergedDays, sortedStats] = sortStats(data.stats);
+
     const years = sortedStats.map((stat) => stat.year);
     availableYears = years;
 
@@ -48,18 +51,24 @@ export const LineChart = () => {
       const monthData = getData(sortedStats, year, month);
       areaBaseline = sum + monthData[0][1];
       chartData = formatData(monthData, sum);
-      chartWidth = 1120;
     } else if (year !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const yearData = getData(sortedStats, year, month);
       areaBaseline = sum + yearData[0][1];
-      chartData = formatData(yearData, sum, step);
+      chartData = formatData(yearData, sum);
+      if (chartData.length > 30) {
+        newStep = Math.ceil(chartData.length / 30);
+        chartData = formatData(yearData, sum, newStep);
+      }
       chartWidth = chartData.length * 40;
     } else {
       let sum = 0;
       areaBaseline = sum;
-      chartData = formatData(Object.entries(mergedDays), sum, step);
-      console.log(chartData.length);
+      chartData = formatData(Object.entries(mergedDays), sum);
+      if (chartData.length > 30) {
+        newStep = Math.ceil(chartData.length / 30);
+        chartData = formatData(Object.entries(mergedDays), sum, newStep);
+      }
       chartWidth = chartData.length * 40;
     }
   }
@@ -82,6 +91,10 @@ export const LineChart = () => {
       },
     ];
   });
+
+  const handleStepChange = () => {
+    
+  }
 
   return (
     <Card sx={{ p: 2, my: 1, height: "500px" }}>
@@ -106,14 +119,30 @@ export const LineChart = () => {
             <MonthPicker month={month} setMonth={setMonth} />
           </>
         )}
-        {(year === "All" || month === "All") && <StepPicker step={step} setStep={setStep}/>}
+        <Box
+          sx={{ ml: "auto", display: "flex", width: 200, flexDirection: "row" }}
+        >
+          <Typography sx={{ mx: 1 }} onClick={() => setIsStepOpen(!isStepOpen)}>
+            {isStepOpen ? "Close" : "Set step"}
+          </Typography>
+          {(year === "All" || month === "All") && isStepOpen && (
+            <StepPicker step={newStep} setStep={setStep} />
+          )}
+        </Box>
       </Box>
-      <Box sx={{ height: "430px", width: "100%", overflowX: "auto" }}>
-        <Box sx={{ height: "400px", width: chartWidth, minWidth: 1100 }}>
+      <Box sx={{ height: "430px", overflowX: "auto" }}>
+        <Box
+          sx={{
+            height: "400px",
+            width: chartWidth,
+            minWidth: 1120,
+            position: "relative",
+          }}
+        >
           <ResponsiveLine
             data={chartState}
             colors={{ datum: "color" }}
-            margin={{ top: 40, right: 40, bottom: 30, left: 70 }}
+            margin={{ top: 40, right: 120, bottom: 30, left: 150 }}
             xScale={{ type: "point" }}
             yScale={{
               type: "linear",

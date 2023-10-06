@@ -7,7 +7,7 @@ const StepPicker = ({ step, setStep, setIsLoading }) => {
   const styles = {
     input: {
       width: "40px",
-      fontSize: "18px",
+      fontSize: "17px",
       border: "none",
       outline: "none",
       position: "relative",
@@ -32,8 +32,8 @@ const StepPicker = ({ step, setStep, setIsLoading }) => {
   // }, [value]);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", ml: 3, mr: 1 }}>
-      <Typography sx={{ pr: 0.4 }}>Step:</Typography>
+    <Box sx={{ display: "flex", alignItems: "center", ml: 2, mr: .2 }}>
+      <Typography sx={{ pr: 0.4, fontSize: 16 }}>Step:</Typography>
 
       <input
         style={styles.input}

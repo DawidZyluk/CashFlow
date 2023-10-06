@@ -41,7 +41,6 @@ export const LineChart = () => {
   let areaBaseline = 0;
   let chartWidth = 0;
   let newStep = 0;
-  //let isLoading = true;
 
   useEffect(() => {
     setIsLoading(true);
@@ -49,7 +48,6 @@ export const LineChart = () => {
   }, [data, step, year]);
 
   setTimeout(() => {
-    console.log(chartData.length);
     setIsLoading(false);
   }, 1000);
 
@@ -104,12 +102,6 @@ export const LineChart = () => {
     ];
   });
 
-  // let chartState = [{
-  //   id: "Overall",
-  //   color: theme.palette.gold[400],
-  //   data: chartData,
-  // }];
-
   const handleIsStepOpenChange = () => {
     setIsLoading(true);
     setIsStepOpen(!isStepOpen);
@@ -147,28 +139,29 @@ export const LineChart = () => {
               width: "fit-content",
               flexDirection: "row",
               border: 1,
-              borderRadius: 100,
+              borderRadius: 1,
               // position: "relative",
               // right: 50,
             }}
           >
             <Box
               sx={{
-                borderRadius: 100,
+                borderRadius: 1,
                 borderTopRightRadius: isStepOpen && 0,
                 borderBottomRightRadius: isStepOpen && 0,
                 borderRight: isStepOpen && 1,
-                px: 3,
+                px: 2,
                 py: 0.4,
-                pr: 2.6,
-                bgcolor: theme.palette.grey[100],
+                pr: 1.6,
+                color: 'white',
+                bgcolor: theme.palette.primary[400],
                 "&:hover": {
                   cursor: "pointer",
                 },
               }}
               onClick={handleIsStepOpenChange}
             >
-              <Typography sx={{}}>
+              <Typography sx={{fontSize: 16}}>
                 {isStepOpen ? "Close" : "Set step"}
               </Typography>
             </Box>

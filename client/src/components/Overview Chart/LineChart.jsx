@@ -38,7 +38,7 @@ export const LineChart = () => {
   let chartData = [];
   let areaBaseline = 0;
   let chartWidth = 0;
-  let newStep = 1;
+  let newStep = 4;
 
   if (data) {
     const [mergedDays, sortedStats] = sortStats(data.stats);
@@ -55,18 +55,18 @@ export const LineChart = () => {
       let sum = calculateBalance(sortedStats, year, month);
       const yearData = getData(sortedStats, year, month);
       areaBaseline = sum + yearData[0][1];
-      chartData = formatData(yearData, sum);
-      if (chartData.length > 30) {
-        newStep = Math.ceil(chartData.length / 30);
+      chartData = formatData(yearData, sum, step);
+      if (chartData.length > 30 && !isStepOpen) {
+        newStep = Math.ceil(chartData.length / 25);
         chartData = formatData(yearData, sum, newStep);
       }
       chartWidth = chartData.length * 40;
     } else {
       let sum = 0;
       areaBaseline = sum;
-      chartData = formatData(Object.entries(mergedDays), sum);
-      if (chartData.length > 30) {
-        newStep = Math.ceil(chartData.length / 30);
+      chartData = formatData(Object.entries(mergedDays), sum, step);
+      if (chartData.length > 30 && !isStepOpen) {
+        newStep = Math.ceil(chartData.length / 25);
         chartData = formatData(Object.entries(mergedDays), sum, newStep);
       }
       chartWidth = chartData.length * 40;
@@ -92,13 +92,14 @@ export const LineChart = () => {
     ];
   });
 
-  const handleStepChange = () => {
-    
-  }
+  const handleIsStepOpenChange = () => {
+    setIsStepOpen(!isStepOpen);
+    setStep(1);
+  };
 
   return (
     <Card sx={{ p: 2, my: 1, height: "500px" }}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", }}>
         <Typography sx={{ my: 0 }} variant="h5">
           Overview Chart
         </Typography>
@@ -119,30 +120,56 @@ export const LineChart = () => {
             <MonthPicker month={month} setMonth={setMonth} />
           </>
         )}
-        <Box
-          sx={{ ml: "auto", display: "flex", width: 200, flexDirection: "row" }}
-        >
-          <Typography sx={{ mx: 1 }} onClick={() => setIsStepOpen(!isStepOpen)}>
-            {isStepOpen ? "Close" : "Set step"}
-          </Typography>
-          {(year === "All" || month === "All") && isStepOpen && (
-            <StepPicker step={newStep} setStep={setStep} />
-          )}
-        </Box>
+        {(year === "All" || month === "All") && (
+          <Box
+            sx={{
+              ml: "auto",
+              display: "flex",
+              width: "fit-content",
+              flexDirection: "row",
+              border: 1,
+              borderRadius: 100,
+              // position: "relative",
+              // right: 50,
+            }}
+          >
+            <Box
+              sx={{
+                borderRadius: 100,
+                borderTopRightRadius: isStepOpen && 0,
+                borderBottomRightRadius: isStepOpen && 0,
+                borderRight: isStepOpen && 1,
+                px: 3,
+                py: 0.4,
+                pr: 2.6,
+                bgcolor: theme.palette.grey[100],
+                "&:hover": {
+                  cursor: "pointer",
+                },
+              }}
+              onClick={handleIsStepOpenChange}
+            >
+              <Typography sx={{}}>
+                {isStepOpen ? "Close" : "Set step"}
+              </Typography>
+            </Box>
+            {isStepOpen && <StepPicker step={step} setStep={setStep} />}
+          </Box>
+        )}
       </Box>
-      <Box sx={{ height: "430px", overflowX: "auto" }}>
+      <Box sx={{ height: "450px", overflowX: "auto" }}>
         <Box
           sx={{
             height: "400px",
             width: chartWidth,
-            minWidth: 1120,
+            minWidth: 1040,
             position: "relative",
           }}
         >
           <ResponsiveLine
             data={chartState}
             colors={{ datum: "color" }}
-            margin={{ top: 40, right: 120, bottom: 30, left: 150 }}
+            margin={{ top: 50, right: 50, bottom: 30, left: 150 }}
             xScale={{ type: "point" }}
             yScale={{
               type: "linear",

@@ -1,36 +1,34 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 const StepPicker = ({ step, setStep }) => {
-  const [query, setQuery] = useState(step);
-  setStep(step)
+  const [value, setValue] = useState(step);
+
   const styles = {
     input: {
-      width: "43px",
-      // padding: '3px 6px',
+      width: "40px",
       fontSize: '18px',
       border: 'none',
       outline: 'none',
       position: 'relative',
       color: 'inherit',
-      top: 1
     },
   };
 
   const handleChange = (e) => {
-    const val = e.target.value;
+    const val = Math.round(e.target.value);
     if(val >= 1 && val < 100) {
-      setQuery(e.target.value)
+      setValue(val)
     }
   }
 
   useEffect(() => {
-    const timeOut = setTimeout(() => setStep(query), 500);
+    const timeOut = setTimeout(() => setStep(value), 500);
     return () => clearTimeout(timeOut);
-  }, [query]);
+  }, [value]);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Box sx={{ display: "flex", alignItems: "center", ml: 3, mr: 1 }}>
       <Typography  sx={{ pr: .4 }}>
         Step:
       </Typography>
@@ -39,7 +37,8 @@ const StepPicker = ({ step, setStep }) => {
         style={styles.input}
         onChange={handleChange}
         type="number"
-        defaultValue={query}
+        defaultValue={value}
+        pattern="[0-9]"
         min={1}
       />
     </Box>

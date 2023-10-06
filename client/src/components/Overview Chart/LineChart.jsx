@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -30,19 +31,30 @@ export const LineChart = () => {
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
   const [isStepOpen, setIsStepOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const theme = useTheme();
 
-  const { data } = useGetStatsQuery();
+  const { data, refetch } = useGetStatsQuery();
   let availableYears = [];
   let chartData = [];
   let areaBaseline = 0;
   let chartWidth = 0;
-  let newStep = 4;
+  let newStep = 0;
+  //let isLoading = true;
+
+  useEffect(() => {
+    setIsLoading(true);
+    refetch();
+  }, [data, step, year]);
+
+  setTimeout(() => {
+    console.log(chartData.length);
+    setIsLoading(false);
+  }, 1000);
 
   if (data) {
     const [mergedDays, sortedStats] = sortStats(data.stats);
-
     const years = sortedStats.map((stat) => stat.year);
     availableYears = years;
 
@@ -92,14 +104,21 @@ export const LineChart = () => {
     ];
   });
 
+  // let chartState = [{
+  //   id: "Overall",
+  //   color: theme.palette.gold[400],
+  //   data: chartData,
+  // }];
+
   const handleIsStepOpenChange = () => {
+    setIsLoading(true);
     setIsStepOpen(!isStepOpen);
     setStep(1);
   };
 
   return (
     <Card sx={{ p: 2, my: 1, height: "500px" }}>
-      <Box sx={{ display: "flex", alignItems: "center", }}>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         <Typography sx={{ my: 0 }} variant="h5">
           Overview Chart
         </Typography>
@@ -153,7 +172,7 @@ export const LineChart = () => {
                 {isStepOpen ? "Close" : "Set step"}
               </Typography>
             </Box>
-            {isStepOpen && <StepPicker step={step} setStep={setStep} />}
+            {isStepOpen && <StepPicker step={step} setStep={setStep} setIsLoading={setIsLoading} />}
           </Box>
         )}
       </Box>
@@ -161,56 +180,62 @@ export const LineChart = () => {
         <Box
           sx={{
             height: "400px",
-            width: chartWidth,
+            width: isLoading ? 500 : chartWidth,
             minWidth: 1040,
-            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <ResponsiveLine
-            data={chartState}
-            colors={{ datum: "color" }}
-            margin={{ top: 50, right: 50, bottom: 30, left: 150 }}
-            xScale={{ type: "point" }}
-            yScale={{
-              type: "linear",
-              min: "auto",
-              max: "auto",
-              stacked: true,
-              reverse: false,
-            }}
-            yFormat=" >-.2f"
-            curve="catmullRom"
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              format: (date) => {
-                return dayjs(date, "DD/MM/YYYY").format("DD/MM");
-              },
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              //legend: "date",
-              legendOffset: 36,
-              legendPosition: "middle",
-            }}
-            axisLeft={{
-              orient: "left",
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              //legend: "value",
-              legendOffset: -60,
-              legendPosition: "middle",
-            }}
-            pointSize={8}
-            pointColor="white"
-            pointBorderWidth={2}
-            pointBorderColor={{ from: "serieColor", modifiers: [] }}
-            pointLabelYOffset={-12}
-            enableArea={true}
-            areaBaselineValue={areaBaseline}
-            useMesh={true}
-          />
+          {!isLoading ? (
+            <ResponsiveLine
+              data={chartState}
+              colors={{ datum: "color" }}
+              margin={{ top: 50, right: 50, bottom: 30, left: 150 }}
+              xScale={{ type: "point" }}
+              yScale={{
+                type: "linear",
+                min: "auto",
+                max: "auto",
+                stacked: true,
+                reverse: false,
+              }}
+              yFormat=" >-.2f"
+              curve="catmullRom"
+              axisTop={null}
+              axisRight={null}
+              axisBottom={{
+                format: (date) => {
+                  return dayjs(date, "DD/MM/YYYY").format("DD/MM");
+                },
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                //legend: "date",
+                legendOffset: 36,
+                legendPosition: "middle",
+              }}
+              axisLeft={{
+                orient: "left",
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                //legend: "value",
+                legendOffset: -60,
+                legendPosition: "middle",
+              }}
+              pointSize={8}
+              pointColor="white"
+              pointBorderWidth={2}
+              pointBorderColor={{ from: "serieColor", modifiers: [] }}
+              pointLabelYOffset={-12}
+              enableArea={true}
+              areaBaselineValue={areaBaseline}
+              useMesh={true}
+            />
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
       </Box>
     </Card>

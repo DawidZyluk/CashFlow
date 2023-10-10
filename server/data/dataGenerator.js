@@ -2,6 +2,7 @@ import fs from "fs";
 import crypto from "crypto";
 import * as url from "url";
 import { LoremIpsum } from "lorem-ipsum";
+import dayjs from "dayjs";
 
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
@@ -115,7 +116,7 @@ function arrayRand(arr) {
 }
 
 function randomDate(
-  start = new Date(2020, 0, 1),
+  start = new Date(2020, 1, 1),
   end = new Date(),
   startHour = 0,
   endHour = 24
@@ -161,7 +162,7 @@ const colors = [
   "#616161",
 ];
 
-const accountType = [
+const accountTypes = [
   "main",
   "cash",
   "credit card",
@@ -170,26 +171,10 @@ const accountType = [
   "investment",
 ];
 
-const entries = {
-  userId: "6512c2cbd9fa5c0d9b1c3016",
-  accountId: {
-    $oid: "64f9b3cc3102cb74934e6401",
-  },
-  date: "2023-09-01T13:53:12+02:00",
-  value: 12,
-  category: "Salary",
-  note: "",
-  createdAt: {
-    $date: "2023-09-07T11:54:09.052Z",
-  },
-  updatedAt: {
-    $date: "2023-09-07T11:54:09.052Z",
-  },
-  __v: 0,
-};
-
 const file = fs.createWriteStream(__dirname + "/data.js");
-const accountIds = [];
+const accounts = [];
+const entries = [];
+const overallStats = [];
 
 file.write(
   `export const User = {
@@ -200,43 +185,136 @@ file.write(
     password: "password",
   };`
 );
+
 file.write("export const accounts = [");
-for (let i = 1; i <= 40; i++) {
+for (let i = 1; i <= 5; i++) {
   const currId = genId();
-  accountIds.push(currId);
+  const accountName = randomAccountName();
+  accounts.push({ id: currId, name: accountName });
+  const accountNumber = Math.random() > 0.5 ? genId() : "";
+  const accountType = arrayRand(accountTypes);
+  const balance =
+    Math.random() > 0.5 ? parseFloat(rand(100, 2000).toFixed(2)) : 0;
+  const createdAt = randomDate();
+  const updatedAt = randomDate();
+  const color = arrayRand(colors);
+
   file.write(
     `{
       _id: "${currId}",
       userId: "6512c2cbd9fa5c0d9b1c3016",
-      accountName: "${randomAccountName()}",
-      accountNumber: "${Math.random() > 0.5 ? genId() : ""}",
-      accountType: "${arrayRand(accountType)}",
-      balance: ${Math.random() > 0.5 ? rand(100, 2000).toFixed(2) : 0},
-      createdAt: "${randomDate()}",
-      updatedAt: "${randomDate()}",
-      color: "${arrayRand(colors)}",
+      accountName: "${accountName}",
+      accountNumber: "${accountNumber}",
+      accountType: "${accountType}",
+      balance: ${balance},
+      createdAt: "${createdAt}",
+      updatedAt: "${updatedAt}",
+      color: "${color}",
     },`
   );
+
+  if (balance) {
+    entries.push({
+      _id: genId(),
+      userId: "6512c2cbd9fa5c0d9b1c3016",
+      accountId: currId,
+      date: createdAt,
+      value: balance,
+      category: "Initial Balance",
+      note: "Account Initialization",
+      createdAt: createdAt,
+      updatedAt: createdAt,
+    });
+  }
+
+  const year = dayjs(createdAt).year();
+  const month = dayjs(createdAt).format("MMMM");
+  let stats = overallStats.find((stat) => stat.year === year);
+  if (!stats) {
+    stats = {
+      userId: "6512c2cbd9fa5c0d9b1c3016",
+      year: year,
+      totalBalance: 0,
+      accounts: {},
+      monthlyData: {},
+      dailyData: {},
+    };
+    overallStats.push(stats);
+  }
+
+  stats.totalBalance += balance;
+  stats.accounts[accountName] = (stats.accounts[accountName] || 0) + balance;
+
+  if (!stats.monthlyData[month]) {
+    stats.monthlyData[month] = {
+      totalBalance: 0,
+      accounts: {},
+    };
+  }
+
+  stats.monthlyData[month].totalBalance += balance;
+  stats.monthlyData[month].accounts[accountName] =
+    (stats.monthlyData[month].accounts[accountName] || 0) + balance;
 }
 file.write("];");
 
-file.write("export const entries = [");
-for (let i = 1; i <= 3000; i++) {
-  const currId = arrayRand(accountIds);
-  file.write(
-    `{
-      _id: "${genId()}",
+for (let i = 1; i <= 50; i++) {
+  const randAccount = arrayRand(accounts);
+  const date = randomDate();
+  const value = parseFloat(rand(-50, 500).toFixed(2));
+
+  entries.push({
+    _id: genId(),
+    userId: "6512c2cbd9fa5c0d9b1c3016",
+    accountId: randAccount.id,
+    date: date,
+    value: value,
+    category: arrayRand(categories),
+    note: Math.random() > 0.5 ? lorem.generateSentences(1) : "",
+    createdAt: randomDate(),
+    updatedAt: randomDate(),
+  });
+
+  const year = dayjs(date).year();
+  const month = dayjs(date).format("MMMM");
+  const day = dayjs(date).format("DD/MM/YYYY");
+  let stats = overallStats.find((stat) => stat.year === year);
+  if (!stats) {
+    stats = {
       userId: "6512c2cbd9fa5c0d9b1c3016",
-      accountId: "${currId}",
-      date: "${randomDate()}",
-      value: ${rand(-50, 500).toFixed(2)},
-      category: "${arrayRand(categories)}",
-      note: "${Math.random() > 0.5 ? lorem.generateSentences(1) : ""}",
-      createdAt: "${randomDate()}",
-      updatedAt: "${randomDate()}",
-    },`
-  );
+      year: year,
+      totalBalance: 0,
+      accounts: {},
+      monthlyData: {},
+      dailyData: {},
+    };
+    overallStats.push(stats);
+  }
+
+  stats.totalBalance += value;
+  stats.accounts[randAccount.name] =
+    (stats.accounts[randAccount.name] || 0) + value;
+
+  if (!stats.monthlyData[month]) {
+    stats.monthlyData[month] = {
+      totalBalance: 0,
+      accounts: {},
+    };
+  }
+
+  stats.monthlyData[month].totalBalance += value;
+  stats.monthlyData[month].accounts[randAccount.name] =
+    (stats.monthlyData[month].accounts[randAccount.name] || 0) + value;
+
+  stats.dailyData[day] = (stats.dailyData[day] || 0) + value;
 }
+
+file.write("export const entries = [");
+for (let entry of entries) file.write(JSON.stringify(entry) + ",");
+file.write("];");
+
+file.write("export const overallStats = [");
+for (let stat of overallStats) file.write(JSON.stringify(stat) + ",");
 file.write("];");
 
 file.close();

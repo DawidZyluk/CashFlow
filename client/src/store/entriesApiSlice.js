@@ -12,8 +12,8 @@ export const entriesApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getEntries: builder.query({
-      query: ({year, month}) => ({
-        url: `${DATA_URL}/getEntries/${year}/${month}`,
+      query: () => ({
+        url: `${DATA_URL}/getEntries/`,
       }),
       keepUnusedDataFor: 1
     }),

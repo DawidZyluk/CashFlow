@@ -96,3 +96,40 @@ export const getEntries = asyncHandler(async (req, res) => {
     entries,
   });
 });
+
+export const deleteEntry = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const entry = await Entry.findById(req.params.id);
+  const {date, value} = entry;
+
+  const account = await Account.findOne({ _id: entry.accountId });
+  const { accountName } = account;
+  account.balance -= value;
+  account.save();
+
+  const year = dayjs(date).year();
+  const month = dayjs(date).format("MMMM");
+  const day = dayjs(date).format("DD/MM/YYYY");
+  const stats = await OverallStats.findOne({ userId, year });
+
+  let { accounts, monthlyData, dailyData } = stats;
+  const currAccount = accounts.get(accountName);
+  const currMonth = monthlyData.get(month);
+  stats.totalBalance -= value;
+  accounts.set(accountName, currAccount - value);
+  currMonth.totalBalance -= value;
+  monthlyData
+    .get(month)
+    .accounts.set(accountName, currMonth.accounts.get(accountName) - value);
+  dailyData.set(day, dailyData.get(day) - value);
+  if(dailyData.get(day) == 0) dailyData.delete(day)
+  stats.save();
+
+  if (entry) {
+    await Entry.deleteOne({ _id: entry._id });
+    res.status(200).json({ message: 'Entry deleted' });
+  } else {
+    res.status(400).json({ message: "Can't delete entry" });
+  }
+});

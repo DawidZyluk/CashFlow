@@ -14,7 +14,7 @@ import {
 } from "@mui/x-data-grid";
 import { Card, Typography } from "@mui/material";
 import AddEntry from "./AddEntry";
-import { useGetEntriesQuery } from "../../store/entriesApiSlice";
+import { useDeleteEntryMutation, useGetEntriesQuery } from "../../store/entriesApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setEntries } from "../../store/authSlice";
 import { useEffect } from "react";
@@ -23,21 +23,18 @@ import { categories } from "./categories";
 import dayjs from "dayjs";
 import NoRowsOverlay from "./NoRowsOverlay";
 
-function EditToolbar() {
-  return (
-    <GridToolbarContainer>
-      <Box sx={{ display: "flex", justifyContent: "right", width: "100%" }}>
-        <GridToolbarQuickFilter sx={{ width: "20%" }} />
-      </Box>
-    </GridToolbarContainer>
-  );
-}
-
 export default function RecentEntries() {
   const { data, refetch, isFetching } = useGetEntriesQuery();
   const dispatch = useDispatch();
   const entries = useSelector((state) => state.auth.entries);
   const accounts = useSelector((state) => state.auth.accounts);
+
+  const [deleteEntry] = useDeleteEntryMutation()
+
+  const handleDelete = async (id) => {
+    await deleteEntry(id)
+    refetch();
+  }
 
   useEffect(() => {
     refetch();
@@ -110,7 +107,7 @@ export default function RecentEntries() {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={() => {}}
+            onClick={() => {handleDelete(id)}}
             color="inherit"
           />,
         ];

@@ -70,8 +70,8 @@ const AccountsList = () => {
           "&::-webkit-scrollbar": {
             display: "none",
           },
-          "-ms-overflow-style": "none",
-          "scrollbar-width": "none",
+          "MsOverflowStyle": "none",
+          "scrollbarWidth": "none",
         }}
       >
         {data?.accounts.map((account) => (

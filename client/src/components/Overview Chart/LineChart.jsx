@@ -26,10 +26,12 @@ import MonthPicker from "./MonthPicker";
 import { useGetStatsQuery } from "../../store/statsApiSlice";
 import StepPicker from "./StepPicker";
 import { useTheme } from "@emotion/react";
+import { useSelector } from "react-redux";
 
 export const LineChart = () => {
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
+  const entries = useSelector((state) => state.auth.entries);
   const [isStepOpen, setIsStepOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -45,7 +47,7 @@ export const LineChart = () => {
   useEffect(() => {
     setIsLoading(true);
     refetch();
-  }, [data, step, year]);
+  }, [data, step, year, entries]);
 
   setTimeout(() => {
     setIsLoading(false);

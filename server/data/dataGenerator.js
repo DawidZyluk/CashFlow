@@ -187,7 +187,7 @@ file.write(
 );
 
 file.write("export const accounts = [");
-for (let i = 1; i <= 5; i++) {
+for (let i = 1; i <= 40; i++) {
   const currId = genId();
   const accountName = randomAccountName();
   accounts.push({ id: currId, name: accountName });
@@ -258,7 +258,7 @@ for (let i = 1; i <= 5; i++) {
 }
 file.write("];");
 
-for (let i = 1; i <= 50; i++) {
+for (let i = 1; i <= 500; i++) {
   const randAccount = arrayRand(accounts);
   const date = randomDate();
   const value = parseFloat(rand(-50, 500).toFixed(2));

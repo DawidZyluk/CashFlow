@@ -74,6 +74,7 @@ export default function AddAccount() {
       dispatch(setAccounts({ accounts: [...accounts, res] }));
       onSubmitProps.resetForm();
       setOpen(false);
+      setColor("#0b8043")
       toast.success("Account Created!");
     } catch (err) {
       toast.error("Can't add an account. Try again.");
@@ -99,7 +100,7 @@ export default function AddAccount() {
     <div>
       <Button
         variant="outlined"
-        sx={{ height: "100%", width: "9rem" }}
+        sx={{ height: "100%" }}
         onClick={handleClickOpen}
       >
         + Add Account

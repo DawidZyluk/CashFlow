@@ -7,7 +7,7 @@ const YearPicker = ({ availableYears, year, setMonth, setYear }) => {
 
   const years = ["All", ...availableYears];
   const handleYearChange = (year) => {
-    if(year === "All") setMonth("All")
+    if (year === "All") setMonth("All");
     setYear(year);
     setIsYearDialogOpen(false);
   };
@@ -33,16 +33,9 @@ const YearPicker = ({ availableYears, year, setMonth, setYear }) => {
             position: "absolute",
             zIndex: 1,
             left: -10,
-            //right: 0,
-            // ml: "auto",
-            // mr: "auto",
           }}
         >
-          <Card
-            sx={{
-
-            }}
-          >
+          <Card>
             {years.map((year) => (
               <Typography
                 key={year}

@@ -123,7 +123,6 @@ export default function RecentEntries() {
       <Box
         sx={{
           display: "flex",
-          height: "2.5rem",
           justifyContent: "space-between",
           alignItems: "center",
         }}

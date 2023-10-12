@@ -17,15 +17,66 @@ const AccountsList = () => {
   }, [data, accounts]);
 
   return (
-    <Card sx={{ p: 2, my: 1 }}>
-      <Typography sx={{ my: 0 }} variant="h5">
-        Accounts
-      </Typography>
-      <Box sx={{ display: "flex", mt: 2 }}>
+    <Card
+      sx={{
+        p: 2,
+        my: 1,
+        position: "relative",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          zIndex: 10,
+          top: 60,
+          height: 10,
+          width: "98%",
+          boxShadow: "inset 0px 15px 8px -11px white",
+        },
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          zIndex: 10,
+          bottom: 15,
+          height: 10,
+          width: "98%",
+          boxShadow: "inset 0px -15px 8px -11px white",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ my: 0 }} variant="h5">
+          Accounts
+        </Typography>
+        <AddAccount />
+      </Box>
+
+      <Box
+        sx={{
+          mt: 1,
+          display: "grid",
+          gridTemplateColumns: "repeat(6, 1fr)",
+          gridAutoRows: "60px",
+          py: 1,
+          rowGap: 1,
+          columnGap: 1,
+          height: "230px",
+
+          overflowY: "scroll",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+        }}
+      >
         {data?.accounts.map((account) => (
           <AccountButon key={account._id} account={account} />
         ))}
-        <AddAccount />
       </Box>
     </Card>
   );

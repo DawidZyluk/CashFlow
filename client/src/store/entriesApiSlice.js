@@ -17,10 +17,23 @@ export const entriesApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 1
     }),
+    getEntry: builder.query({
+      query: (id) => ({
+        url: `${DATA_URL}/${id}`,
+      }),
+      keepUnusedDataFor: 1
+    }),
     deleteEntry: builder.mutation({
       query: (id) => ({
         url: `${DATA_URL}/${id}`,
         method: 'DELETE',
+      }),
+    }),
+    updateEntry: builder.mutation({
+      query: (data) => ({
+        url: `${DATA_URL}/updateEntry`,
+        method: 'PUT',
+        body: data
       }),
     }),
   }),
@@ -29,5 +42,7 @@ export const entriesApiSlice = apiSlice.injectEndpoints({
 export const {
   useAddEntryMutation,
   useGetEntriesQuery,
-  useDeleteEntryMutation
+  useGetEntryQuery,
+  useDeleteEntryMutation,
+  useUpdateEntryMutation
 } = entriesApiSlice;

@@ -127,14 +127,13 @@ export const logoutUser = asyncHandler(async (req, res) => {
 });
 
 export const getUserProfile = asyncHandler(async (req, res) => {
-  
   const user = {
     _id: req.user._id,
     verified: req.user.verified,
     name: req.user.name,
     email: req.user.email,
   };
-  
+
   res.status(200).json(user);
 });
 
@@ -164,7 +163,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 export const requestVerifyAccount = asyncHandler(async (req, res) => {
   const { _id, name, email } = req.user;
 
-  const user = await User.findById(req.user._id).select("name email verified");;
+  const user = await User.findById(req.user._id).select("name email verified");
   if (user.verified)
     return res.status(200).json({ message: "User already verified", user });
 
@@ -182,7 +181,9 @@ export const requestVerifyAccount = asyncHandler(async (req, res) => {
 export const verifyAccount = asyncHandler(async (req, res) => {
   const { userId, token } = req.body;
 
-  const user = await User.findOne({ _id: userId }).select("name email verified");
+  const user = await User.findOne({ _id: userId }).select(
+    "name email verified"
+  );
   if (user.verified)
     return res
       .status(200)
@@ -205,7 +206,11 @@ export const verifyAccount = asyncHandler(async (req, res) => {
     { new: true }
   );
   await verificationToken.deleteOne();
-  const updatedUser = await User.findOne({ _id: userId }).select("name email verified");
+  const updatedUser = await User.findOne({ _id: userId }).select(
+    "name email verified"
+  );
 
-  res.status(200).send({ message: "Email verified successfully", user: updatedUser });
+  res
+    .status(200)
+    .send({ message: "Email verified successfully", user: updatedUser });
 });

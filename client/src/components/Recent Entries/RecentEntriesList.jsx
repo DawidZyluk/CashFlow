@@ -14,7 +14,10 @@ import {
 } from "@mui/x-data-grid";
 import { Card, Typography } from "@mui/material";
 import AddEntry from "./AddEntry";
-import { useDeleteEntryMutation, useGetEntriesQuery } from "../../store/entriesApiSlice";
+import {
+  useDeleteEntryMutation,
+  useGetEntriesQuery,
+} from "../../store/entriesApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setEntries } from "../../store/authSlice";
 import { useEffect } from "react";
@@ -29,12 +32,12 @@ export default function RecentEntries() {
   const entries = useSelector((state) => state.auth.entries);
   const accounts = useSelector((state) => state.auth.accounts);
 
-  const [deleteEntry] = useDeleteEntryMutation()
+  const [deleteEntry] = useDeleteEntryMutation();
 
   const handleDelete = async (id) => {
-    await deleteEntry(id)
+    await deleteEntry(id);
     refetch();
-  }
+  };
 
   useEffect(() => {
     refetch();
@@ -70,7 +73,7 @@ export default function RecentEntries() {
       field: "value",
       headerName: "Value",
       type: "number",
-      flex: .8,
+      flex: 0.8,
       align: "left",
       headerAlign: "left",
       valueFormatter: (params) => `$${params.value.toFixed(2)}`,
@@ -97,17 +100,13 @@ export default function RecentEntries() {
       cellClassName: "actions",
       getActions: ({ id }) => {
         return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => {}}
-            color="inherit"
-          />,
+          <AddEntry variant="edit" id={id}/>,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={() => {handleDelete(id)}}
+            onClick={() => {
+              handleDelete(id);
+            }}
             color="inherit"
           />,
         ];

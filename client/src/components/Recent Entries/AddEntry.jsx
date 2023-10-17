@@ -2,6 +2,7 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
+import EditIcon from "@mui/icons-material/Edit";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -12,6 +13,7 @@ import {
   Card,
   FormControl,
   FormHelperText,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -31,7 +33,11 @@ import "dayjs/locale/en-gb";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useState } from "react";
-import { useAddEntryMutation } from "../../store/entriesApiSlice";
+import {
+  useAddEntryMutation,
+  useGetEntryQuery,
+  useUpdateEntryMutation,
+} from "../../store/entriesApiSlice";
 import { categories } from "./categories";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
 
@@ -40,9 +46,10 @@ dayjs.extend(timezone);
 const localTimezone = dayjs.tz.guess();
 dayjs.tz.setDefault(localTimezone);
 
-export default function AddEntry() {
+export default function AddEntry({ variant = "add", id = null }) {
   const [open, setOpen] = React.useState(false);
   const [addEntry, { error }] = useAddEntryMutation();
+  const [updateEntry, { error: updateError }] = useUpdateEntryMutation();
   const { data, refetch } = useGetAccountsQuery();
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -51,8 +58,11 @@ export default function AddEntry() {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [date, setDate] = useState(dayjs());
+  let entryData;
+  let entryRefetch;
 
   const handleClickOpen = () => {
+    setDate(dayjs());
     setOpen(true);
   };
 
@@ -60,18 +70,45 @@ export default function AddEntry() {
     setOpen(false);
   };
 
+  if (variant == "edit") {
+    const { data, refetch } = useGetEntryQuery(id);
+    entryData = data;
+    entryRefetch = refetch;
+  }
+
   const handleSubmit = async (values, onSubmitProps) => {
     try {
       const res = await addEntry({ ...values, date: date.format() }).unwrap();
       dispatch(setEntries({ entries: [...entries, res] }));
+      setOpen(false);
       refetch();
       dispatch(setAccounts({ ...data }));
-      setOpen(false);
       onSubmitProps.resetForm();
       setDate(dayjs());
       toast.success("Entry Created!");
     } catch (err) {
       toast.error("Can't add entry. Try again.");
+      console.log(err);
+    }
+  };
+
+  const handleEdit = async (values, onSubmitProps) => {
+    try {
+      const res = await updateEntry({
+        id,
+        ...values,
+        date: date.format(),
+      }).unwrap();
+      dispatch(setEntries({ entries: [...entries, res] }));
+      refetch();
+      entryRefetch();
+      dispatch(setAccounts({ ...data }));
+      setOpen(false);
+      onSubmitProps.resetForm();
+      setDate(dayjs());
+      toast.success("Entry Updated!");
+    } catch (err) {
+      toast.error("Can't update entry. Try again.");
       console.log(err);
     }
   };
@@ -87,7 +124,7 @@ export default function AddEntry() {
     note: yup.string(),
   });
 
-  const initialValues = {
+  let initialValues = {
     date: date,
     value: "",
     accountId: accounts?.length ? accounts[0]._id : "",
@@ -95,15 +132,32 @@ export default function AddEntry() {
     note: "",
   };
 
+  if (entryData) {
+    const { date, value, accountId, category, note } = entryData.entry;
+    initialValues = {
+      date: date,
+      value: value,
+      accountId: accountId._id,
+      category: category,
+      note: note,
+    };
+  }
+
   return (
     <div>
-      <Button
-        variant="outlined"
-        sx={{ height: "100%" }}
-        onClick={handleClickOpen}
-      >
-        + Add Entry
-      </Button>
+      {variant == "add" ? (
+        <Button
+          variant="outlined"
+          sx={{ height: "100%" }}
+          onClick={handleClickOpen}
+        >
+          + Add Entry
+        </Button>
+      ) : (
+        <IconButton onClick={handleClickOpen} size="small">
+          <EditIcon sx={{ fontSize: "1.2rem" }} />
+        </IconButton>
+      )}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ ml: 1 }}>Entry Details</DialogTitle>
         <DialogContent>
@@ -126,7 +180,7 @@ export default function AddEntry() {
           )}
           <Formik
             validateOnBlur={false}
-            onSubmit={handleSubmit}
+            onSubmit={variant == "add" ? handleSubmit : handleEdit}
             initialValues={initialValues}
             validationSchema={entrySchema}
           >
@@ -166,7 +220,7 @@ export default function AddEntry() {
                       autoComplete="date"
                       onBlur={handleBlur}
                       onChange={(value) => setDate(value)}
-                      value={date}
+                      value={variant === "edit" ? dayjs(values.date) : date}
                       error={Boolean(touched.date) && Boolean(errors.date)}
                       helperText={touched.date && errors.date}
                       sx={{ gridColumn: "span 2" }}
@@ -191,8 +245,8 @@ export default function AddEntry() {
                       id="accountId"
                       sx={{
                         color:
-                          (Boolean(touched.accountId) &&
-                            Boolean(errors.accountId)) &&
+                          Boolean(touched.accountId) &&
+                          Boolean(errors.accountId) &&
                           "error.main",
                       }}
                     >
@@ -212,7 +266,11 @@ export default function AddEntry() {
                       }
                     >
                       {accounts.map((account, index) => (
-                        <MenuItem key={account._id} value={account._id} defaultChecked={index == 0}>
+                        <MenuItem
+                          key={account._id}
+                          value={account._id}
+                          defaultChecked={index == 0}
+                        >
                           {account.accountName}
                         </MenuItem>
                       ))}
@@ -226,8 +284,8 @@ export default function AddEntry() {
                       id="category"
                       sx={{
                         color:
-                          (Boolean(touched.accountId) &&
-                            Boolean(errors.accountId)) &&
+                          Boolean(touched.accountId) &&
+                          Boolean(errors.accountId) &&
                           "error.main",
                       }}
                     >
@@ -279,7 +337,7 @@ export default function AddEntry() {
                     onClick={handleSubmit}
                     disabled={isSubmitting || !isValid}
                   >
-                    Add Entry
+                    {variant === "add" ? "Add Entry" : "Save changes"}
                   </Button>
                 </DialogActions>
               </>

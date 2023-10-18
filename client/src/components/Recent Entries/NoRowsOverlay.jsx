@@ -68,7 +68,7 @@ export default function NoRowsOverlay() {
           </g>
         </g>
       </svg>
-      <Box sx={{ mt: 1 }}>No Rows</Box>
+      <Box sx={{ mt: 1, color: 'gray' }}>No Entries</Box>
     </StyledGridOverlay>
   );
 }

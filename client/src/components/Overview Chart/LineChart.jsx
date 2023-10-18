@@ -27,6 +27,7 @@ import { useGetStatsQuery } from "../../store/statsApiSlice";
 import StepPicker from "./StepPicker";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
+import NoChartData from "./NoChartData";
 
 export const LineChart = () => {
   const [year, setYear] = useState("All");
@@ -155,7 +156,7 @@ export const LineChart = () => {
                 px: 2,
                 py: 0.4,
                 pr: 1.6,
-                color: 'white',
+                color: "white",
                 bgcolor: theme.palette.primary[400],
                 "&:hover": {
                   cursor: "pointer",
@@ -163,75 +164,85 @@ export const LineChart = () => {
               }}
               onClick={handleIsStepOpenChange}
             >
-              <Typography sx={{fontSize: 16}}>
+              <Typography sx={{ fontSize: 16 }}>
                 {isStepOpen ? "Close" : "Set step"}
               </Typography>
             </Box>
-            {isStepOpen && <StepPicker step={step} setStep={setStep} setIsLoading={setIsLoading} />}
+            {isStepOpen && (
+              <StepPicker
+                step={step}
+                setStep={setStep}
+                setIsLoading={setIsLoading}
+              />
+            )}
           </Box>
         )}
       </Box>
       <Box sx={{ height: "450px", overflowX: "auto" }}>
-        <Box
-          sx={{
-            height: "400px",
-            width: isLoading ? 500 : chartWidth,
-            minWidth: 1040,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {!isLoading ? (
-            <ResponsiveLine
-              data={chartState}
-              colors={{ datum: "color" }}
-              margin={{ top: 50, right: 50, bottom: 30, left: 150 }}
-              xScale={{ type: "point" }}
-              yScale={{
-                type: "linear",
-                min: "auto",
-                max: "auto",
-                stacked: true,
-                reverse: false,
-              }}
-              yFormat=" >-.2f"
-              curve="catmullRom"
-              axisTop={null}
-              axisRight={null}
-              axisBottom={{
-                format: (date) => {
-                  return dayjs(date, "DD/MM/YYYY").format("DD/MM");
-                },
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                //legend: "date",
-                legendOffset: 36,
-                legendPosition: "middle",
-              }}
-              axisLeft={{
-                orient: "left",
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                //legend: "value",
-                legendOffset: -60,
-                legendPosition: "middle",
-              }}
-              pointSize={8}
-              pointColor="white"
-              pointBorderWidth={2}
-              pointBorderColor={{ from: "serieColor", modifiers: [] }}
-              pointLabelYOffset={-12}
-              enableArea={true}
-              areaBaselineValue={areaBaseline}
-              useMesh={true}
-            />
-          ) : (
-            <CircularProgress />
-          )}
-        </Box>
+        {chartState[0].data.length ? (
+          <Box
+            sx={{
+              height: "400px",
+              width: isLoading ? 500 : chartWidth,
+              minWidth: 1040,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {!isLoading ? (
+              <ResponsiveLine
+                data={chartState}
+                colors={{ datum: "color" }}
+                margin={{ top: 50, right: 50, bottom: 30, left: 150 }}
+                xScale={{ type: "point" }}
+                yScale={{
+                  type: "linear",
+                  min: "auto",
+                  max: "auto",
+                  stacked: true,
+                  reverse: false,
+                }}
+                yFormat=" >-.2f"
+                curve="catmullRom"
+                axisTop={null}
+                axisRight={null}
+                axisBottom={{
+                  format: (date) => {
+                    return dayjs(date, "DD/MM/YYYY").format("DD/MM");
+                  },
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  //legend: "date",
+                  legendOffset: 36,
+                  legendPosition: "middle",
+                }}
+                axisLeft={{
+                  orient: "left",
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  //legend: "value",
+                  legendOffset: -60,
+                  legendPosition: "middle",
+                }}
+                pointSize={8}
+                pointColor="white"
+                pointBorderWidth={2}
+                pointBorderColor={{ from: "serieColor", modifiers: [] }}
+                pointLabelYOffset={-12}
+                enableArea={true}
+                areaBaselineValue={areaBaseline}
+                useMesh={true}
+              />
+            ) : (
+              <CircularProgress />
+            )}
+          </Box>
+        ) : (
+          <NoChartData />
+        )}
       </Box>
     </Card>
   );

@@ -38,7 +38,7 @@ export const LineChart = () => {
   const [step, setStep] = useState(1);
   const theme = useTheme();
 
-  const { data, refetch } = useGetStatsQuery();
+  const { data, refetch, isFetching } = useGetStatsQuery();
   let availableYears = [];
   let chartData = [];
   let areaBaseline = 0;
@@ -62,6 +62,7 @@ export const LineChart = () => {
     if (year !== "All" && month !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const monthData = getData(sortedStats, year, month);
+      console.log(monthData)
       areaBaseline = sum + monthData[0][1];
       chartData = formatData(monthData, sum);
     } else if (year !== "All") {
@@ -112,7 +113,7 @@ export const LineChart = () => {
   };
 
   return (
-    <Card sx={{ p: 2, my: 1, height: "500px" }}>
+    <Card sx={{ p: 2, my: 1, height: "500px", }}>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Typography sx={{ my: 0 }} variant="h5">
           Overview Chart
@@ -179,7 +180,7 @@ export const LineChart = () => {
         )}
       </Box>
       <Box sx={{ height: "450px", overflowX: "auto" }}>
-        {chartState[0].data.length ? (
+        {isFetching || chartState[0].data.length ? (
           <Box
             sx={{
               height: "400px",

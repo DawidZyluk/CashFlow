@@ -29,7 +29,7 @@ import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import NoChartData from "./NoChartData";
 
-export const LineChart = () => {
+export const LineChart = ({allowControls}) => {
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
   const entries = useSelector((state) => state.auth.entries);
@@ -62,7 +62,7 @@ export const LineChart = () => {
     if (year !== "All" && month !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const monthData = getData(sortedStats, year, month);
-      console.log(monthData)
+      console.log(monthData);
       areaBaseline = sum + monthData[0][1];
       chartData = formatData(monthData, sum);
     } else if (year !== "All") {
@@ -113,77 +113,89 @@ export const LineChart = () => {
   };
 
   return (
-    <Card sx={{ p: 2, my: 1, height: "500px", }}>
+    <Card
+      sx={{
+        p: 2,
+        // my: 1,
+        // height: "500px",
+        gridColumn: "span 4",
+        gridRow: "span 4",
+      }}
+    >
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Typography sx={{ my: 0 }} variant="h5">
           Overview Chart
         </Typography>
-        <FiberManualRecordIcon
-          sx={{ fontSize: 12, color: "lightgray", mx: 1 }}
-        />
-        <YearPicker
-          availableYears={availableYears}
-          year={year}
-          setMonth={setMonth}
-          setYear={setYear}
-        />
-        {year !== "All" && (
+        {allowControls && (
           <>
             <FiberManualRecordIcon
               sx={{ fontSize: 12, color: "lightgray", mx: 1 }}
             />
-            <MonthPicker month={month} setMonth={setMonth} />
+            <YearPicker
+              availableYears={availableYears}
+              year={year}
+              setMonth={setMonth}
+              setYear={setYear}
+            />
+            {year !== "All" && (
+              <>
+                <FiberManualRecordIcon
+                  sx={{ fontSize: 12, color: "lightgray", mx: 1 }}
+                />
+                <MonthPicker month={month} setMonth={setMonth} />
+              </>
+            )}
+            {(year === "All" || month === "All") && (
+              <Box
+                sx={{
+                  ml: "auto",
+                  display: "flex",
+                  width: "fit-content",
+                  flexDirection: "row",
+                  border: 1,
+                  borderRadius: 1,
+                  // position: "relative",
+                  // right: 50,
+                }}
+              >
+                <Box
+                  sx={{
+                    borderRadius: 1,
+                    borderTopRightRadius: isStepOpen && 0,
+                    borderBottomRightRadius: isStepOpen && 0,
+                    borderRight: isStepOpen && 1,
+                    px: 2,
+                    py: 0.4,
+                    pr: 1.6,
+                    color: "white",
+                    bgcolor: theme.palette.primary[400],
+                    "&:hover": {
+                      cursor: "pointer",
+                    },
+                  }}
+                  onClick={handleIsStepOpenChange}
+                >
+                  <Typography sx={{ fontSize: 16 }}>
+                    {isStepOpen ? "Close" : "Set step"}
+                  </Typography>
+                </Box>
+                {isStepOpen && (
+                  <StepPicker
+                    step={step}
+                    setStep={setStep}
+                    setIsLoading={setIsLoading}
+                  />
+                )}
+              </Box>
+            )}
           </>
         )}
-        {(year === "All" || month === "All") && (
-          <Box
-            sx={{
-              ml: "auto",
-              display: "flex",
-              width: "fit-content",
-              flexDirection: "row",
-              border: 1,
-              borderRadius: 1,
-              // position: "relative",
-              // right: 50,
-            }}
-          >
-            <Box
-              sx={{
-                borderRadius: 1,
-                borderTopRightRadius: isStepOpen && 0,
-                borderBottomRightRadius: isStepOpen && 0,
-                borderRight: isStepOpen && 1,
-                px: 2,
-                py: 0.4,
-                pr: 1.6,
-                color: "white",
-                bgcolor: theme.palette.primary[400],
-                "&:hover": {
-                  cursor: "pointer",
-                },
-              }}
-              onClick={handleIsStepOpenChange}
-            >
-              <Typography sx={{ fontSize: 16 }}>
-                {isStepOpen ? "Close" : "Set step"}
-              </Typography>
-            </Box>
-            {isStepOpen && (
-              <StepPicker
-                step={step}
-                setStep={setStep}
-                setIsLoading={setIsLoading}
-              />
-            )}
-          </Box>
-        )}
       </Box>
-      <Box sx={{ height: "450px", overflowX: "auto" }}>
+      <Box sx={{ height: "400px", overflowX: "auto" }}>
         {isFetching || chartState[0].data.length ? (
           <Box
             sx={{
-              height: "400px",
+              height: "360px",
               width: isLoading ? 500 : chartWidth,
               minWidth: 1040,
               display: "flex",

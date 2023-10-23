@@ -42,7 +42,7 @@ const data = [
 // website examples showcase many properties,
 // you'll often use just a few of them.
 export const PieChart = () => (
-  <Card sx={{width: '100%', height: 600}}>
+  <Card sx={{ gridColumn: "span 2", gridRow: "span 4" }}>
     <ResponsivePie
       data={data}
       margin={{ top: 40, right: 80, bottom: 80, left: 80 }}

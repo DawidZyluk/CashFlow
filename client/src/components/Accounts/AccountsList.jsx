@@ -20,8 +20,10 @@ const AccountsList = () => {
   return (
     <Card
       sx={{
+        gridColumn: 'span 2',
+        gridRow: 'span 4',
         p: 2,
-        my: 1,
+        // my: 1,
         position: "relative",
         "&::before": {
           content: '""',
@@ -60,12 +62,12 @@ const AccountsList = () => {
           sx={{
             mt: 1,
             display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)",
+            gridTemplateColumns: "repeat(3, 1fr)",
             gridAutoRows: "60px",
             py: 1,
             rowGap: 1,
             columnGap: 1,
-            maxHeight: "230px",
+            maxHeight: "385px",
 
             overflowY: "scroll",
             "&::-webkit-scrollbar": {

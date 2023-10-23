@@ -100,7 +100,7 @@ export default function RecentEntries() {
       cellClassName: "actions",
       getActions: ({ id }) => {
         return [
-          <AddEntry variant="edit" id={id}/>,
+          <AddEntry variant="edit" id={id} />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
@@ -115,7 +115,7 @@ export default function RecentEntries() {
   ];
 
   return (
-    <Card sx={{ p: 2, my: 1 }}>
+    <Card sx={{ p: 2, gridColumn: "span 4", gridRow: "span 4" }}>
       <Box
         sx={{
           display: "flex",
@@ -131,7 +131,7 @@ export default function RecentEntries() {
       <Box
         sx={{
           mt: 2,
-          height: 500,
+          height: 375,
           width: "100%",
           "& .actions": {
             color: "text.secondary",

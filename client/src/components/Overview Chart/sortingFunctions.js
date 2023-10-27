@@ -169,3 +169,9 @@ export function formatData(data, sum, step = 1) {
 
   return formatedData;
 }
+
+export function pieFormat(data) {
+  
+
+  return formatedData;
+}

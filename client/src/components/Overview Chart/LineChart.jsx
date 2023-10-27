@@ -29,7 +29,7 @@ import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import NoChartData from "./NoChartData";
 
-export const LineChart = ({allowControls}) => {
+export const LineChart = ({ allowControls = true }) => {
   const [year, setYear] = useState("All");
   const [month, setMonth] = useState("All");
   const entries = useSelector((state) => state.auth.entries);
@@ -62,8 +62,7 @@ export const LineChart = ({allowControls}) => {
     if (year !== "All" && month !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const monthData = getData(sortedStats, year, month);
-      console.log(monthData);
-      areaBaseline = sum + monthData[0][1];
+      if (monthData[0]) areaBaseline = sum + monthData[0][1];
       chartData = formatData(monthData, sum);
     } else if (year !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
@@ -111,7 +110,6 @@ export const LineChart = ({allowControls}) => {
     setIsStepOpen(!isStepOpen);
     setStep(1);
   };
-
   return (
     <Card
       sx={{
@@ -126,7 +124,7 @@ export const LineChart = ({allowControls}) => {
         <Typography sx={{ my: 0 }} variant="h5">
           Overview Chart
         </Typography>
-        {allowControls && (
+        {true && (
           <>
             <FiberManualRecordIcon
               sx={{ fontSize: 12, color: "lightgray", mx: 1 }}

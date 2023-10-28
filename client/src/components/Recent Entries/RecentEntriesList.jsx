@@ -131,7 +131,7 @@ export default function RecentEntries() {
       <Box
         sx={{
           mt: 2,
-          height: 375,
+          height: 450,
           width: "100%",
           "& .actions": {
             color: "text.secondary",

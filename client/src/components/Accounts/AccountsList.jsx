@@ -67,7 +67,7 @@ const AccountsList = () => {
             py: 1,
             rowGap: 1,
             columnGap: 1,
-            maxHeight: "385px",
+            maxHeight: "465px",
 
             overflowY: "scroll",
             "&::-webkit-scrollbar": {

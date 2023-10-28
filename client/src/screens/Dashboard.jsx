@@ -21,7 +21,7 @@ const Dashboard = () => {
           display: "grid",
           gridGap: '20px',
           gridTemplateColumns: "repeat(6, 1fr)",
-          gridTemplateRows: "repeat(8,100px)",
+          gridTemplateRows: "repeat(8,120px)",
         }}
       >
         {!verified && <Verification />}

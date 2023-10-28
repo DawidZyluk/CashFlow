@@ -189,11 +189,11 @@ export const LineChart = ({ allowControls = true }) => {
           </>
         )}
       </Box>
-      <Box sx={{ height: "400px", overflowX: "auto" }}>
+      <Box sx={{ height: "500px", overflowX: "auto" }}>
         {isFetching || chartState[0].data.length ? (
           <Box
             sx={{
-              height: "360px",
+              height: "440px",
               width: isLoading ? 500 : chartWidth,
               minWidth: 1040,
               display: "flex",

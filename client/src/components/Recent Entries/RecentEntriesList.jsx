@@ -25,6 +25,7 @@ import { useState } from "react";
 import { categories } from "./categories";
 import dayjs from "dayjs";
 import NoRowsOverlay from "./NoRowsOverlay";
+import { currencyFormat } from "../../utils/numbers";
 
 export default function RecentEntries() {
   const { data, refetch, isFetching } = useGetEntriesQuery();
@@ -50,7 +51,7 @@ export default function RecentEntries() {
       field: "date",
       headerName: "Date",
       flex: 1,
-      valueFormatter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
+      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
     },
     {
       field: "accountId",
@@ -76,21 +77,19 @@ export default function RecentEntries() {
       flex: 0.8,
       align: "left",
       headerAlign: "left",
-      valueFormatter: (params) => `$${params.value.toFixed(2)}`,
+      valueFormatter: (params) => currencyFormat(params.value),
     },
     {
       field: "createdAt",
       headerName: "Created at",
       flex: 1,
-      valueFormatter: (params) =>
-        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
+      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
     },
     {
       field: "updatedAt",
       headerName: "Updated at",
       flex: 1,
-      valueFormatter: (params) =>
-        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
+      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
     },
     {
       field: "actions",

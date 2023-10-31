@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import Account from "../models/accountModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import OverallStats from "../models/overallStatsModel.js";
+import Entry from "../models/entryModel.js";
 
 export const addAccount = asyncHandler(async (req, res) => {
   const { accountName, accountNumber, accountType, balance, color } = req.body;
@@ -17,7 +18,8 @@ export const addAccount = asyncHandler(async (req, res) => {
   });
 
   const year = dayjs().year();
-  const month = dayjs().format('MMMM');
+  const month = dayjs().format("MMMM");
+  const day = dayjs().format("DD/MM/YYYY");
 
   const stats = await OverallStats.findOne({ userId, year });
 
@@ -33,10 +35,12 @@ export const addAccount = asyncHandler(async (req, res) => {
           accounts: { [accountName]: balance },
         },
       },
-      dailyData: {},
+      dailyData: {
+        [day]: balance,
+      },
     });
   } else {
-    let { accounts, monthlyData } = stats;
+    let { accounts, monthlyData, dailyData } = stats;
     const currAccount = accounts.get(accountName);
     const currMonth = monthlyData.get(month);
     stats.totalBalance += balance;
@@ -58,8 +62,19 @@ export const addAccount = asyncHandler(async (req, res) => {
         accounts: { [accountName]: balance },
       });
     }
+    if (dailyData.get(day)) dailyData.set(day, dailyData.get(day) + balance);
+    else dailyData.set(day, balance);
     stats.save();
   }
+
+  await Entry.create({
+    userId,
+    date: new Date().toISOString(),
+    value: balance,
+    accountId: account._id,
+    category: 'Account Initial Value',
+    note: "",
+  });
 
   if (account) {
     res.status(201).json({

@@ -12,13 +12,13 @@ export const connectDB = async () => {
 
 
     // console.log("Seeding database...")
-    // Account.collection.drop()
-    // Entry.collection.drop()
-    // OverallStats.collection.drop();
-    // Account.insertMany(accounts)
-    // //UserModel.create(User);
-    // Entry.insertMany(entries)
-    // OverallStats.insertMany(overallStats);
+    // await Account.collection.drop()
+    // await OverallStats.collection.drop();
+    // await Entry.collection.drop()
+    // await Account.insertMany(accounts)
+    // //await UserModel.create(User);
+    // await Entry.insertMany(entries)
+    // await OverallStats.insertMany(overallStats);
     // console.log("Database has beed seeded.")
 
   } catch (error) {

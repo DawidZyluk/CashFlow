@@ -44,7 +44,7 @@ export default function RecentEntries() {
     refetch();
     dispatch(setEntries({ entries: data?.entries }));
     //console.log(data?.entries[0]);
-  }, [data, entries]);
+  }, [data, entries, accounts]);
 
   const columns = [
     {

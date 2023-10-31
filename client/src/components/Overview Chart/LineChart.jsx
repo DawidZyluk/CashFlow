@@ -36,6 +36,7 @@ export const LineChart = ({ allowControls = true }) => {
   const [isStepOpen, setIsStepOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const accounts = useSelector((state) => state.auth.accounts)
   const theme = useTheme();
 
   const { data, refetch, isFetching } = useGetStatsQuery();
@@ -48,7 +49,7 @@ export const LineChart = ({ allowControls = true }) => {
   useEffect(() => {
     setIsLoading(true);
     refetch();
-  }, [data, step, year, entries]);
+  }, [data, step, year, entries, accounts]);
 
   setTimeout(() => {
     setIsLoading(false);
@@ -76,7 +77,7 @@ export const LineChart = ({ allowControls = true }) => {
       chartWidth = chartData.length * 40;
     } else {
       let sum = 0;
-      areaBaseline = sum;
+      areaBaseline = Object.values(mergedDays)[0];
       chartData = formatData(Object.entries(mergedDays), sum, step);
       if (chartData.length > 30 && !isStepOpen) {
         newStep = Math.ceil(chartData.length / 25);

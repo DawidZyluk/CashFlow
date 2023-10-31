@@ -105,106 +105,112 @@ export const PieChart = () => {
       >
         {!isFetching ? (
           <>
-            <ResponsivePie
-              data={formatedData || []}
-              margin={{ top: 20, right: 0, bottom: 20, left: 0 }}
-              sortByValue={true}
-              innerRadius={0.55}
-              padAngle={2}
-              onMouseEnter={mouseEnterHandler}
-              animate={false}
-              tooltip={() => <></>}
-              activeOuterRadiusOffset={0}
-              cornerRadius={6}
-              borderWidth={1}
-              borderColor={{
-                from: "color",
-                modifiers: [["darker", 0.2]],
-              }}
-              arcLinkLabelsSkipAngle={10}
-              arcLinkLabelsTextColor="#333333"
-              arcLinkLabelsThickness={2}
-              arcLinkLabelsColor={{ from: "color" }}
-              arcLabelsSkipAngle={15}
-              arcLinkLabelsStraightLength={7}
-              arcLinkLabelsDiagonalLength={15}
-              arcLinkLabelsTextOffset={4}
-              arcLabelsTextColor="#fafafa"
-              arcLinkLabel={(e) => e.label}
-              arcLabel={(e) =>
-                `${((e.value / totalBalance) * 100).toFixed(2)}%`
-              }
-              colors={({ data }) => data.color}
-              enableArcLabels={false}
-              enableArcLinkLabels={false}
-            />
-            <Box
-              sx={{
-                // border: 1,
-                // borderColor: accountInfo.color,
-                // bgcolor: `${accountInfo.color}22`,
-                borderRadius: "50%",
-                width: "11rem",
-                height: "11rem",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%,-50%)",
-                display: "flex",
-                flexDirection: " column",
-                justifyContent: " center",
-                alignItems: "center",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+            {formatedData[0] ? (
+              <>
+                <ResponsivePie
+                  data={formatedData || []}
+                  margin={{ top: 20, right: 0, bottom: 20, left: 0 }}
+                  sortByValue={true}
+                  innerRadius={0.55}
+                  padAngle={2}
+                  onMouseEnter={mouseEnterHandler}
+                  animate={false}
+                  tooltip={() => <></>}
+                  activeOuterRadiusOffset={0}
+                  cornerRadius={6}
+                  borderWidth={1}
+                  borderColor={{
+                    from: "color",
+                    modifiers: [["darker", 0.2]],
+                  }}
+                  arcLinkLabelsSkipAngle={10}
+                  arcLinkLabelsTextColor="#333333"
+                  arcLinkLabelsThickness={2}
+                  arcLinkLabelsColor={{ from: "color" }}
+                  arcLabelsSkipAngle={15}
+                  arcLinkLabelsStraightLength={7}
+                  arcLinkLabelsDiagonalLength={15}
+                  arcLinkLabelsTextOffset={4}
+                  arcLabelsTextColor="#fafafa"
+                  arcLinkLabel={(e) => e.label}
+                  arcLabel={(e) =>
+                    `${((e.value / totalBalance) * 100).toFixed(2)}%`
+                  }
+                  colors={({ data }) => data.color}
+                  enableArcLabels={false}
+                  enableArcLinkLabels={false}
+                />
                 <Box
                   sx={{
-                    height: "1rem",
-                    width: "1rem",
-                    bgcolor: accountInfo.color || formatedData[0].color,
-                    mr: 1,
-                    borderRadius: "2px",
-                  }}
-                ></Box>
-                <Typography
-                  noWrap
-                  sx={{
-                    maxWidth: "160px",
-                    textAlign: "center",
-                    fontWeight: "bold",
-                    color: theme.palette.grey[900],
-                    fontSize: 18,
+                    // border: 1,
+                    // borderColor: accountInfo.color,
+                    // bgcolor: `${accountInfo.color}22`,
+                    borderRadius: "50%",
+                    width: "11rem",
+                    height: "11rem",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%,-50%)",
+                    display: "flex",
+                    flexDirection: " column",
+                    justifyContent: " center",
+                    alignItems: "center",
                   }}
                 >
-                  {accountInfo.label || formatedData[0].label}
-                </Typography>
-              </Box>
-              <Typography
-                noWrap
-                sx={{
-                  color: theme.palette.grey[900],
-                  fontSize: 20,
-                  maxWidth: "170px",
-                  fontWeight: "light",
-                }}
-              >
-                {currencyFormat(accountInfo.value || formatedData[0].value)}
-              </Typography>
-              <Typography
-                sx={{
-                  color: theme.palette.grey[900],
-                  fontSize: 18,
-                  fontWeight: "light",
-                }}
-              >
-                {(
-                  ((accountInfo.value || formatedData[0].value) /
-                    totalBalance) *
-                  100
-                ).toFixed(2)}
-                %
-              </Typography>
-            </Box>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        height: "1rem",
+                        width: "1rem",
+                        bgcolor: accountInfo.color || formatedData[0].color,
+                        mr: 1,
+                        borderRadius: "2px",
+                      }}
+                    ></Box>
+                    <Typography
+                      noWrap
+                      sx={{
+                        maxWidth: "160px",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        color: theme.palette.grey[900],
+                        fontSize: 18,
+                      }}
+                    >
+                      {accountInfo.label || formatedData[0].label}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    noWrap
+                    sx={{
+                      color: theme.palette.grey[900],
+                      fontSize: 20,
+                      maxWidth: "170px",
+                      fontWeight: "light",
+                    }}
+                  >
+                    {currencyFormat(accountInfo.value || formatedData[0].value)}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: theme.palette.grey[900],
+                      fontSize: 18,
+                      fontWeight: "light",
+                    }}
+                  >
+                    {(
+                      ((accountInfo.value || formatedData[0].value) /
+                        totalBalance) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </Typography>
+                </Box>
+              </>
+            ) : (
+              <p>No data</p>
+            )}
           </>
         ) : (
           <CircularProgress />

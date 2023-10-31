@@ -5,14 +5,13 @@ const NoAccounts = () => {
   return (
     <Box
       sx={{
-        height: 60,
-        pt: 1,
+        height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <Typography>No accounts </Typography>
+      <Typography>No accounts</Typography>
     </Box>
   );
 };

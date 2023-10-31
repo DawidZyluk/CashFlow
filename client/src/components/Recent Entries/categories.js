@@ -9,4 +9,5 @@ export const categories = [
   { id: 8, name: 'Transportation' },
   { id: 9, name: 'Entertainment' },
   { id: 10, name: 'Healthcare' },
+  { id: 11, name: 'Account Initial Value' },
 ]

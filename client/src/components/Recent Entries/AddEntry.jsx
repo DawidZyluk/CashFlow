@@ -134,6 +134,7 @@ export default function AddEntry({ variant = "add", id = null }) {
 
   if (entryData) {
     const { date, value, accountId, category, note } = entryData.entry;
+
     initialValues = {
       date: date,
       value: value,

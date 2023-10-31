@@ -1,4 +1,4 @@
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import AddAccount from "./AddAccount";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
@@ -8,7 +8,7 @@ import AccountButon from "./AccountButon";
 import NoAccounts from "./NoAccounts";
 
 const AccountsList = () => {
-  const { data, refetch } = useGetAccountsQuery();
+  const { data, refetch, isFetching } = useGetAccountsQuery();
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.auth.accounts);
 
@@ -17,11 +17,16 @@ const AccountsList = () => {
     dispatch(setAccounts({ ...data }));
   }, [data, accounts]);
 
+  let sortedAccounts = [];
+  if (data) {
+    sortedAccounts = [...data.accounts].sort((a, b) => b.balance - a.balance);
+  }
+
   return (
     <Card
       sx={{
-        gridColumn: 'span 2',
-        gridRow: 'span 4',
+        gridColumn: "span 2",
+        gridRow: "span 4",
         p: 2,
         // my: 1,
         position: "relative",
@@ -52,37 +57,51 @@ const AccountsList = () => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h5">
-          Accounts
-        </Typography>
+        <Typography variant="h5">Accounts</Typography>
         <AddAccount />
       </Box>
-      {data?.accounts.length ? (
+      {!isFetching ? (
+        <>
+          {data?.accounts.length ? (
+            <Box
+              sx={{
+                mt: 1,
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridAutoRows: "60px",
+                py: 1,
+                rowGap: 1,
+                columnGap: 1,
+                maxHeight: "465px",
+
+                overflowY: "scroll",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                MsOverflowStyle: "none",
+                scrollbarWidth: "none",
+              }}
+            >
+              {sortedAccounts.map((account) => (
+                <AccountButon key={account._id} account={account} />
+              ))}
+            </Box>
+          ) : (
+            <NoAccounts />
+          )}
+        </>
+      ) : (
         <Box
           sx={{
-            mt: 1,
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gridAutoRows: "60px",
-            py: 1,
-            rowGap: 1,
-            columnGap: 1,
-            maxHeight: "465px",
-
-            overflowY: "scroll",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            MsOverflowStyle: "none",
-            scrollbarWidth: "none",
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          {data?.accounts.map((account) => (
-            <AccountButon key={account._id} account={account} />
-          ))}
+          <CircularProgress />
         </Box>
-      ) : (
-        <NoAccounts></NoAccounts>
       )}
     </Card>
   );

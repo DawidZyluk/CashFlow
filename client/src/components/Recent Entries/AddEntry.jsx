@@ -17,6 +17,8 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Tab,
+  Tabs,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -47,7 +49,8 @@ const localTimezone = dayjs.tz.guess();
 dayjs.tz.setDefault(localTimezone);
 
 export default function AddEntry({ variant = "add", id = null }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState(0);
   const [addEntry, { error }] = useAddEntryMutation();
   const [updateEntry, { error: updateError }] = useUpdateEntryMutation();
   const { data, refetch } = useGetAccountsQuery();
@@ -63,6 +66,7 @@ export default function AddEntry({ variant = "add", id = null }) {
 
   const handleClickOpen = () => {
     setDate(dayjs());
+    setTab(0);
     setOpen(true);
   };
 
@@ -78,13 +82,22 @@ export default function AddEntry({ variant = "add", id = null }) {
 
   const handleSubmit = async (values, onSubmitProps) => {
     try {
-      const res = await addEntry({ ...values, date: date.format() }).unwrap();
+      if (tab) {
+        const account = accounts.find((o) => o._id == values.accountId);
+        values.value -= account.balance;
+        values.category = "Update";
+      }
+      const res = await addEntry({
+        ...values,
+        date: date.format(),
+      }).unwrap();
       dispatch(setEntries({ entries: [...entries, res] }));
       setOpen(false);
       refetch();
       dispatch(setAccounts({ ...data }));
       onSubmitProps.resetForm();
       setDate(dayjs());
+      setTab(0);
       toast.success("Entry Created!");
     } catch (err) {
       toast.error("Can't add entry. Try again.");
@@ -144,6 +157,20 @@ export default function AddEntry({ variant = "add", id = null }) {
     };
   }
 
+  const handleTabChange = (event, val) => {
+    setTab(val);
+  };
+
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div hidden={value !== index} {...other}>
+        {value === index && <Box>{children}</Box>}
+      </div>
+    );
+  }
+
   return (
     <div>
       {variant == "add" ? (
@@ -160,190 +187,331 @@ export default function AddEntry({ variant = "add", id = null }) {
         </IconButton>
       )}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ ml: 1 }}>Entry Details</DialogTitle>
+        <DialogTitle sx={{ ml: 1, }}>Entry Details</DialogTitle>
+        {variant !== "edit" && (
+          <Tabs value={tab} onChange={handleTabChange} sx={{mb: 1}} centered>
+            <Tab label="Create Entry" />
+            <Tab label="Update Account" />
+          </Tabs>
+        )}
         <DialogContent>
-          {error && (
-            <Card
-              variant="outlined"
-              sx={{
-                width: "100%",
-                textAlign: "center",
-                py: 1,
-                borderColor: theme.palette.error.light,
-                backgroundColor: theme.palette.error[50],
-                mb: 2,
-              }}
-            >
-              <Typography sx={{ color: theme.palette.error.main }}>
-                {error?.data?.message || "Something went wrong. Try again"}
-              </Typography>
-            </Card>
-          )}
-          <Formik
-            validateOnBlur={false}
-            onSubmit={variant == "add" ? handleSubmit : handleEdit}
-            initialValues={initialValues}
-            validationSchema={entrySchema}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isValid,
-              isSubmitting,
-            }) => (
-              <>
-                <Box
-                  sx={{
-                    pt: 1,
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                  component="form"
-                  display="grid"
-                  gap="1rem"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  onSubmit={handleSubmit}
-                  noValidate
-                >
-                  <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                    adapterLocale="en-gb"
-                  >
-                    <DatePicker
-                      name="date"
-                      label="Date"
-                      id="date"
-                      autoComplete="date"
-                      onBlur={handleBlur}
-                      onChange={(value) => setDate(value)}
-                      value={variant === "edit" ? dayjs(values.date) : date}
-                      error={Boolean(touched.date) && Boolean(errors.date)}
-                      helperText={touched.date && errors.date}
-                      sx={{ gridColumn: "span 2" }}
-                      disableFuture
-                    />
-                  </LocalizationProvider>
-                  <TextField
-                    name="value"
-                    type="number"
-                    label="Value"
-                    id="value"
-                    autoComplete="value"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.value}
-                    error={Boolean(touched.value) && Boolean(errors.value)}
-                    helperText={touched.value && errors.value}
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
-                    <InputLabel
-                      id="accountId"
-                      sx={{
-                        color:
-                          Boolean(touched.accountId) &&
-                          Boolean(errors.accountId) &&
-                          "error.main",
-                      }}
-                    >
-                      Account
-                    </InputLabel>
-                    <Select
-                      fullWidth
-                      name="accountId"
-                      label="Account Id"
-                      id="accountId"
-                      autoComplete="accountId"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.accountId}
-                      error={
-                        Boolean(touched.accountId) && Boolean(errors.accountId)
-                      }
-                    >
-                      {accounts.map((account, index) => (
-                        <MenuItem
-                          key={account._id}
-                          value={account._id}
-                          defaultChecked={index == 0}
-                        >
-                          {account.accountName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText sx={{ color: "error.main" }}>
-                      {touched.accountId && errors.accountId}
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
-                    <InputLabel
-                      id="category"
-                      sx={{
-                        color:
-                          Boolean(touched.accountId) &&
-                          Boolean(errors.accountId) &&
-                          "error.main",
-                      }}
-                    >
-                      Category
-                    </InputLabel>
-                    <Select
-                      fullWidth
-                      name="category"
-                      label="Category"
-                      id="category"
-                      autoComplete="category"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.category}
-                      error={
-                        Boolean(touched.category) && Boolean(errors.category)
-                      }
-                    >
-                      {categories.map((category) => (
-                        <MenuItem key={category.id} value={category.name}>
-                          {category.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText sx={{ color: "error.main" }}>
-                      {touched.accountId && errors.accountId}
-                    </FormHelperText>
-                  </FormControl>
-                  <TextField
-                    name="note"
-                    label="Note"
-                    id="note"
-                    autoComplete="note"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.note}
-                    error={Boolean(touched.note) && Boolean(errors.note)}
-                    helperText={touched.note && errors.note}
-                    sx={{ gridColumn: "span 4" }}
-                  />
-                </Box>
-                <DialogActions
-                  sx={{ display: "flex", alignItems: "center", mt: 1 }}
-                >
-                  <Button onClick={handleClose}>Cancel</Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    onClick={handleSubmit}
-                    disabled={isSubmitting || !isValid}
-                  >
-                    {variant === "add" ? "Add Entry" : "Save changes"}
-                  </Button>
-                </DialogActions>
-              </>
+          <TabPanel value={tab} index={0}>
+            {error && (
+              <Card
+                variant="outlined"
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  py: 1,
+                  borderColor: theme.palette.error.light,
+                  backgroundColor: theme.palette.error[50],
+                  mb: 2,
+                }}
+              >
+                <Typography sx={{ color: theme.palette.error.main }}>
+                  {error?.data?.message || "Something went wrong. Try again"}
+                </Typography>
+              </Card>
             )}
-          </Formik>
+            <Formik
+              validateOnBlur={false}
+              onSubmit={variant == "add" ? handleSubmit : handleEdit}
+              initialValues={initialValues}
+              validationSchema={entrySchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isValid,
+                isSubmitting,
+              }) => (
+                <>
+                  <Box
+                    sx={{
+                      pt: 1,
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 4",
+                      },
+                    }}
+                    component="form"
+                    display="grid"
+                    gap="1rem"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    onSubmit={handleSubmit}
+                    noValidate
+                  >
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      adapterLocale="en-gb"
+                    >
+                      <DatePicker
+                        name="date"
+                        label="Date"
+                        id="date"
+                        autoComplete="date"
+                        onBlur={handleBlur}
+                        onChange={(value) => setDate(value)}
+                        value={variant === "edit" ? dayjs(values.date) : date}
+                        error={Boolean(touched.date) && Boolean(errors.date)}
+                        helperText={touched.date && errors.date}
+                        sx={{ gridColumn: "span 2" }}
+                        disableFuture
+                      />
+                    </LocalizationProvider>
+                    <TextField
+                      name="value"
+                      type="number"
+                      label="Value"
+                      id="value"
+                      autoComplete="value"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.value}
+                      error={Boolean(touched.value) && Boolean(errors.value)}
+                      helperText={touched.value && errors.value}
+                      sx={{ gridColumn: "span 2" }}
+                    />
+                    <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                      <InputLabel
+                        id="accountId"
+                        sx={{
+                          color:
+                            Boolean(touched.accountId) &&
+                            Boolean(errors.accountId) &&
+                            "error.main",
+                        }}
+                      >
+                        Account
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        name="accountId"
+                        label="Account Id"
+                        id="accountId"
+                        autoComplete="accountId"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.accountId}
+                        error={
+                          Boolean(touched.accountId) &&
+                          Boolean(errors.accountId)
+                        }
+                      >
+                        {accounts.map((account, index) => (
+                          <MenuItem
+                            key={account._id}
+                            value={account._id}
+                            defaultChecked={index == 0}
+                          >
+                            {account.accountName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText sx={{ color: "error.main" }}>
+                        {touched.accountId && errors.accountId}
+                      </FormHelperText>
+                    </FormControl>
+                    <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                      <InputLabel
+                        id="category"
+                        sx={{
+                          color:
+                            Boolean(touched.accountId) &&
+                            Boolean(errors.accountId) &&
+                            "error.main",
+                        }}
+                      >
+                        Category
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        name="category"
+                        label="Category"
+                        id="category"
+                        autoComplete="category"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.category}
+                        error={
+                          Boolean(touched.category) && Boolean(errors.category)
+                        }
+                      >
+                        {categories.map((category) => (
+                          <MenuItem key={category.id} value={category.name}>
+                            {category.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText sx={{ color: "error.main" }}>
+                        {touched.accountId && errors.accountId}
+                      </FormHelperText>
+                    </FormControl>
+                    <TextField
+                      name="note"
+                      label="Note"
+                      id="note"
+                      autoComplete="note"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.note}
+                      error={Boolean(touched.note) && Boolean(errors.note)}
+                      helperText={touched.note && errors.note}
+                      sx={{ gridColumn: "span 4" }}
+                    />
+                  </Box>
+                  <DialogActions
+                    sx={{ display: "flex", alignItems: "center", mt: 1 }}
+                  >
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      onClick={handleSubmit}
+                      disabled={isSubmitting || !isValid}
+                    >
+                      {variant === "add" ? "Add Entry" : "Save changes"}
+                    </Button>
+                  </DialogActions>
+                </>
+              )}
+            </Formik>
+          </TabPanel>
+          <TabPanel value={tab} index={1}>
+            {error && (
+              <Card
+                variant="outlined"
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  py: 1,
+                  borderColor: theme.palette.error.light,
+                  backgroundColor: theme.palette.error[50],
+                  mb: 2,
+                }}
+              >
+                <Typography sx={{ color: theme.palette.error.main }}>
+                  {error?.data?.message || "Something went wrong. Try again"}
+                </Typography>
+              </Card>
+            )}
+            <Formik
+              validateOnBlur={false}
+              onSubmit={handleSubmit}
+              initialValues={initialValues}
+              validationSchema={entrySchema}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isValid,
+                isSubmitting,
+              }) => (
+                <>
+                  <Box
+                    sx={{
+                      pt: 1,
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 4",
+                      },
+                    }}
+                    component="form"
+                    display="grid"
+                    gap="1rem"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    onSubmit={handleSubmit}
+                    noValidate
+                  >
+                    <TextField
+                      name="value"
+                      type="number"
+                      label="Value"
+                      id="value"
+                      autoComplete="value"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.value}
+                      error={Boolean(touched.value) && Boolean(errors.value)}
+                      helperText={touched.value && errors.value}
+                      sx={{ gridColumn: "span 2" }}
+                    />
+                    <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                      <InputLabel
+                        id="accountId"
+                        sx={{
+                          color:
+                            Boolean(touched.accountId) &&
+                            Boolean(errors.accountId) &&
+                            "error.main",
+                        }}
+                      >
+                        Account
+                      </InputLabel>
+                      <Select
+                        fullWidth
+                        name="accountId"
+                        label="Account Id"
+                        id="accountId"
+                        autoComplete="accountId"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.accountId}
+                        error={
+                          Boolean(touched.accountId) &&
+                          Boolean(errors.accountId)
+                        }
+                      >
+                        {accounts.map((account, index) => (
+                          <MenuItem
+                            key={account._id}
+                            value={account._id}
+                            defaultChecked={index == 0}
+                          >
+                            {account.accountName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText sx={{ color: "error.main" }}>
+                        {touched.accountId && errors.accountId}
+                      </FormHelperText>
+                    </FormControl>
+                    <TextField
+                      name="note"
+                      label="Note"
+                      id="note"
+                      autoComplete="note"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.note}
+                      error={Boolean(touched.note) && Boolean(errors.note)}
+                      helperText={touched.note && errors.note}
+                      sx={{ gridColumn: "span 4" }}
+                    />
+                  </Box>
+                  <DialogActions
+                    sx={{ display: "flex", alignItems: "center", mt: 1 }}
+                  >
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      onClick={handleSubmit}
+                      disabled={isSubmitting || !isValid}
+                    >
+                      Update
+                    </Button>
+                  </DialogActions>
+                </>
+              )}
+            </Formik>
+          </TabPanel>
         </DialogContent>
       </Dialog>
     </div>

@@ -50,13 +50,13 @@ export default function RecentEntries() {
     {
       field: "date",
       headerName: "Date",
-      flex: 1,
+      flex: .8,
       valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
     },
     {
       field: "accountId",
       headerName: "Account",
-      flex: 1,
+      flex: 0.8,
       align: "left",
       headerAlign: "left",
       type: "singleSelect",
@@ -66,7 +66,7 @@ export default function RecentEntries() {
     {
       field: "category",
       headerName: "Category",
-      flex: 1,
+      flex: 0.8,
       type: "singleSelect",
       valueOptions: categories?.map((obj) => obj.name),
     },
@@ -83,19 +83,21 @@ export default function RecentEntries() {
       field: "createdAt",
       headerName: "Created at",
       flex: 1,
-      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
+      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
+      valueFormatter: (params) => dayjs(params.value, "DD/MM/YYYY, HH:mm:ss").format("DD/MM/YYYY, HH:mm"),
     },
     {
       field: "updatedAt",
       headerName: "Updated at",
       flex: 1,
-      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
+      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
+      valueFormatter: (params) => dayjs(params.value, "DD/MM/YYYY, HH:mm:ss").format("DD/MM/YYYY, HH:mm"),
     },
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: .8,
       cellClassName: "actions",
       getActions: ({ id }) => {
         return [

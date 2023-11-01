@@ -42,6 +42,7 @@ import {
 } from "../../store/entriesApiSlice";
 import { categories } from "../Recent Entries/categories";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
+import { currencyFormat } from "../../utils/numbers";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -161,7 +162,7 @@ const AccountButon = ({ account }) => {
         >
           {account.accountName}
         </Typography>
-        <Typography>${account.balance.toFixed(2)}</Typography>
+        <Typography>{currencyFormat(account.balance)}</Typography>
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ ml: 1 }}>Entry Details</DialogTitle>

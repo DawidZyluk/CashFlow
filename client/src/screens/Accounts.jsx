@@ -1,16 +1,23 @@
 import { Box, Card, IconButton, Typography } from "@mui/material";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { currencyFormat } from "../utils/numbers";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import { useGetAccountsQuery } from "../store/accountsApiSlice";
 import AddAccount from "../components/Accounts/AddAccount";
 import DeleteAccount from "../components/Accounts/DeleteAccount";
+import { setAccounts } from "../store/authSlice";
 
 const Accounts = () => {
   const { data, refetch } = useGetAccountsQuery();
   const accounts = useSelector((state) => state.auth.accounts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    refetch();
+    dispatch(setAccounts({ accounts: data?.accounts }));
+  }, [data, accounts])
   return (
     <Box sx={{ mx: 17, my: 5, mb: 10 }}>
       <Typography sx={{ my: 2 }} variant="h4">
@@ -49,7 +56,7 @@ const Accounts = () => {
                 </Typography>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                   <AddAccount variant="edit" id={account._id}/>
-                  <DeleteAccount />
+                  <DeleteAccount id={account._id} name={account.accountName}/>
                 </Box>
               </Box>
               <Typography

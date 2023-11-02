@@ -60,21 +60,6 @@ export default function AddAccount({ variant = "add", id = null }) {
     "#616161",
   ];
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setIsDialogOpen(false);
-    setColor("#0b8043");
-  };
-
-  const handleColorChangeComplete = (color) => {
-    setColor(color.hex);
-    setIsDialogOpen(false);
-  };
-
   let accountData;
   let accountRefetch;
   if (variant == "edit") {
@@ -102,7 +87,9 @@ export default function AddAccount({ variant = "add", id = null }) {
       const res = await updateAccount({
         id,
         ...values,
+        color,
       }).unwrap();
+      accountRefetch();
       dispatch(setAccounts({ accounts: [...accounts, res] }));
       setOpen(false);
       setColor("#0b8043");
@@ -121,7 +108,7 @@ export default function AddAccount({ variant = "add", id = null }) {
     balance: yup.number().required("Required"),
   });
 
-  const initialValues = {
+  let initialValues = {
     accountName: "",
     accountNumber: "",
     accountType: "cash",
@@ -131,7 +118,6 @@ export default function AddAccount({ variant = "add", id = null }) {
   if (accountData) {
     const { accountName, accountNumber, accountType, balance } =
       accountData.account;
-
     initialValues = {
       accountName,
       accountNumber,
@@ -139,6 +125,21 @@ export default function AddAccount({ variant = "add", id = null }) {
       balance,
     };
   }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+    setColor(accountData.account.color || "#0b8043");
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setIsDialogOpen(false);
+  };
+
+  const handleColorChangeComplete = (color) => {
+    setColor(color.hex);
+    setIsDialogOpen(false);
+  };
 
   return (
     <div>
@@ -176,7 +177,7 @@ export default function AddAccount({ variant = "add", id = null }) {
           )}
           <Formik
             validateOnBlur={false}
-            onSubmit={handleSubmit}
+            onSubmit={variant == "add" ? handleSubmit : handleEdit}
             initialValues={initialValues}
             validationSchema={accountSchema}
           >
@@ -272,7 +273,10 @@ export default function AddAccount({ variant = "add", id = null }) {
                     }
                     helperText={touched.accountNumber && errors.accountNumber}
                   />
-                  <FormControl fullWidth sx={{ gridColumn: variant === "add" ? "span 2" : 'span 4' }}>
+                  <FormControl
+                    fullWidth
+                    sx={{ gridColumn: variant === "add" ? "span 2" : "span 4" }}
+                  >
                     <InputLabel
                       id="accountType"
                       // sx={{

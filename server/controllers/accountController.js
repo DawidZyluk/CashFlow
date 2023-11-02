@@ -72,7 +72,7 @@ export const addAccount = asyncHandler(async (req, res) => {
     date: new Date().toISOString(),
     value: balance,
     accountId: account._id,
-    category: 'Account Initial Value',
+    category: "Account Initial Value",
     note: "",
   });
 
@@ -97,5 +97,46 @@ export const getAccounts = asyncHandler(async (req, res) => {
   );
   res.status(201).json({
     accounts,
+  });
+});
+
+export const getAccount = asyncHandler(async (req, res) => {
+  const account = await Account.findById(req.params.id).select(
+    "accountName accountNumber accountType balance color"
+  );
+  res.status(201).json({
+    account,
+  });
+});
+
+export const updateAccount = asyncHandler(async (req, res) => {
+  const { id, accountName, accountNumber, accountType, color } = req.body;
+  const account = await Account.findById(id);
+
+  if (account) {
+    account.accountName = accountName || account.accountName;
+    account.accountNumber = accountNumber || account.accountNumber;
+    account.accountType = accountType || account.accountType;
+    account.color = color || account.color;
+    await account.save();
+  } else {
+    res.status(404).json({ message: "Account not found" });
+  }
+  res.status(201).json({
+    account,
+  });
+});
+
+export const deleteAccount = asyncHandler(async (req, res) => {
+  const account = await Account.findById(req.params.id);
+  if (account) {
+    await Account.deleteOne({ _id: account._id });
+    await Entry.deleteMany({ accountId: account._id });
+  } else {
+    res.status(404).json({ message: "Account not found" });
+  }
+  console.log(account);
+  res.status(201).json({
+    message: "Account deleted"
   });
 });

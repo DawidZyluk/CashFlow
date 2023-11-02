@@ -37,11 +37,13 @@ import timezone from "dayjs/plugin/timezone";
 import { useState } from "react";
 import {
   useAddEntryMutation,
+  useGetEntriesQuery,
   useGetEntryQuery,
   useUpdateEntryMutation,
 } from "../../store/entriesApiSlice";
 import { categories } from "./categories";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
+import { useEffect } from "react";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -64,6 +66,15 @@ export default function AddEntry({ variant = "add", id = null }) {
   let entryData;
   let entryRefetch;
 
+  const { data: entriesData, refetch: entriesRefetch } = useGetEntriesQuery();
+
+  useEffect(() => {
+    entriesRefetch();
+    refetch();
+    dispatch(setEntries({ entries: entriesData?.entries }));
+    //console.log(data?.entries[0]);
+  }, [data, entries, accounts]);
+
   const handleClickOpen = () => {
     setDate(dayjs());
     setTab(0);
@@ -76,7 +87,7 @@ export default function AddEntry({ variant = "add", id = null }) {
 
   if (variant == "edit") {
     const { data, refetch } = useGetEntryQuery(id);
-    entryData = data;
+    entryData = data?.entry;
     entryRefetch = refetch;
   }
 
@@ -144,10 +155,9 @@ export default function AddEntry({ variant = "add", id = null }) {
     category: "Salary",
     note: "",
   };
-
+  
   if (entryData) {
-    const { date, value, accountId, category, note } = entryData.entry;
-
+    const { date, value, accountId, category, note } = entryData;
     initialValues = {
       date: date,
       value: value,

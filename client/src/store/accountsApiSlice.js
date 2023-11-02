@@ -15,12 +15,34 @@ export const accountsApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: `${ACCOUNTS_URL}/getAccounts`,
       }),
-      keepUnusedDataFor: 1
+      keepUnusedDataFor: 1,
+    }),
+    getAccount: builder.query({
+      query: (id) => ({
+        url: `${ACCOUNTS_URL}/${id}`,
+      }),
+      keepUnusedDataFor: 1,
+    }),
+    deleteAccount: builder.mutation({
+      query: (id) => ({
+        url: `${ACCOUNTS_URL}/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    updateAccount: builder.mutation({
+      query: (data) => ({
+        url: `${ACCOUNTS_URL}/updateAccount`,
+        method: "PUT",
+        body: data,
+      }),
     }),
   }),
 });
 
 export const {
   useAddAccountMutation,
-  useGetAccountsQuery
+  useGetAccountsQuery,
+  useGetAccountQuery,
+  useDeleteAccountMutation,
+  useUpdateAccountMutation
 } = accountsApiSlice;

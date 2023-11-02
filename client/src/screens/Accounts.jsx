@@ -5,6 +5,8 @@ import { currencyFormat } from "../utils/numbers";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import { useGetAccountsQuery } from "../store/accountsApiSlice";
+import AddAccount from "../components/Accounts/AddAccount";
+import DeleteAccount from "../components/Accounts/DeleteAccount";
 
 const Accounts = () => {
   const { data, refetch } = useGetAccountsQuery();
@@ -45,17 +47,9 @@ const Accounts = () => {
                 <Typography sx={{ fontSize: 22, maxWidth: "80%" }}>
                   {account.accountName}
                 </Typography>
-                <Box sx={{}}>
-                  <IconButton size="small">
-                    <EditIcon
-                      sx={{ fontSize: "1.2rem", color: "whitesmoke" }}
-                    />
-                  </IconButton>
-                  <IconButton size="small">
-                    <DeleteOutlineIcon
-                      sx={{ fontSize: "1.2rem", color: "whitesmoke" }}
-                    />
-                  </IconButton>
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                  <AddAccount variant="edit" id={account._id}/>
+                  <DeleteAccount />
                 </Box>
               </Box>
               <Typography

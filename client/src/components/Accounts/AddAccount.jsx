@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
+import EditIcon from "@mui/icons-material/Edit";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Formik } from "formik";
@@ -13,13 +14,19 @@ import {
   Card,
   FormControl,
   FormHelperText,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useAddAccountMutation } from "../../store/accountsApiSlice";
+import {
+  useAddAccountMutation,
+  useDeleteAccountMutation,
+  useGetAccountQuery,
+  useUpdateAccountMutation,
+} from "../../store/accountsApiSlice";
 import { useTheme } from "@emotion/react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,11 +35,12 @@ import { useState } from "react";
 import useDialog from "../../hooks/useDialog";
 import { adjustFontColor } from "../../utils/adjustFontColor";
 
-export default function AddAccount() {
+export default function AddAccount({ variant = "add", id = null }) {
   const [open, setOpen] = useState(false);
-  const [ ref, isDialogOpen, setIsDialogOpen ] = useDialog(false);
+  const [ref, isDialogOpen, setIsDialogOpen] = useDialog(false);
   const [color, setColor] = useState("#0b8043");
   const [addAccount, { error }] = useAddAccountMutation();
+  const [updateAccount, { error: updateError }] = useUpdateAccountMutation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.auth.accounts);
@@ -52,7 +60,6 @@ export default function AddAccount() {
     "#616161",
   ];
 
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -60,7 +67,7 @@ export default function AddAccount() {
   const handleClose = () => {
     setOpen(false);
     setIsDialogOpen(false);
-    setColor("#0b8043")
+    setColor("#0b8043");
   };
 
   const handleColorChangeComplete = (color) => {
@@ -68,16 +75,41 @@ export default function AddAccount() {
     setIsDialogOpen(false);
   };
 
+  let accountData;
+  let accountRefetch;
+  if (variant == "edit") {
+    const { data, refetch } = useGetAccountQuery(id);
+    accountData = data;
+    accountRefetch = refetch;
+  }
+
   const handleSubmit = async (values, onSubmitProps) => {
     try {
-      const res = await addAccount({...values, color}).unwrap();
+      const res = await addAccount({ ...values, color }).unwrap();
       dispatch(setAccounts({ accounts: [...accounts, res] }));
       onSubmitProps.resetForm();
       setOpen(false);
-      setColor("#0b8043")
+      setColor("#0b8043");
       toast.success("Account Created!");
     } catch (err) {
       toast.error("Can't add an account. Try again.");
+      console.log(err);
+    }
+  };
+
+  const handleEdit = async (values, onSubmitProps) => {
+    try {
+      const res = await updateAccount({
+        id,
+        ...values,
+      }).unwrap();
+      dispatch(setAccounts({ accounts: [...accounts, res] }));
+      setOpen(false);
+      setColor("#0b8043");
+      onSubmitProps.resetForm();
+      toast.success("Account Updated!");
+    } catch (err) {
+      toast.error("Can't update account. Try again.");
       console.log(err);
     }
   };
@@ -96,15 +128,33 @@ export default function AddAccount() {
     balance: 0,
   };
 
+  if (accountData) {
+    const { accountName, accountNumber, accountType, balance } =
+      accountData.account;
+
+    initialValues = {
+      accountName,
+      accountNumber,
+      accountType,
+      balance,
+    };
+  }
+
   return (
     <div>
-      <Button
-        variant="outlined"
-        sx={{ height: "100%" }}
-        onClick={handleClickOpen}
-      >
-        + Add Account
-      </Button>
+      {variant == "add" ? (
+        <Button
+          variant="outlined"
+          sx={{ height: "100%" }}
+          onClick={handleClickOpen}
+        >
+          + Add Account
+        </Button>
+      ) : (
+        <IconButton onClick={handleClickOpen} size="small">
+          <EditIcon sx={{ fontSize: "1.2rem", color: "whitesmoke" }} />
+        </IconButton>
+      )}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ ml: 1, mb: -1.5 }}>Account Details</DialogTitle>
         <DialogContent>
@@ -222,7 +272,7 @@ export default function AddAccount() {
                     }
                     helperText={touched.accountNumber && errors.accountNumber}
                   />
-                  <FormControl fullWidth sx={{ gridColumn: "span 2" }}>
+                  <FormControl fullWidth sx={{ gridColumn: variant === "add" ? "span 2" : 'span 4' }}>
                     <InputLabel
                       id="accountType"
                       // sx={{
@@ -259,20 +309,24 @@ export default function AddAccount() {
                       {touched.accountType && errors.accountType}
                     </FormHelperText>
                   </FormControl>
-                  <TextField
-                    sx={{ gridColumn: "span 2" }}
-                    fullWidth
-                    id="balance"
-                    label="Initial Balance"
-                    type="number"
-                    name="balance"
-                    autoComplete="balance"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.balance}
-                    error={Boolean(touched.balance) && Boolean(errors.balance)}
-                    helperText={touched.balance && errors.balance}
-                  />
+                  {variant === "add" && (
+                    <TextField
+                      sx={{ gridColumn: "span 2" }}
+                      fullWidth
+                      id="balance"
+                      label="Initial Balance"
+                      type="number"
+                      name="balance"
+                      autoComplete="balance"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.balance}
+                      error={
+                        Boolean(touched.balance) && Boolean(errors.balance)
+                      }
+                      helperText={touched.balance && errors.balance}
+                    />
+                  )}
                 </Box>
                 <DialogActions
                   sx={{ display: "flex", alignItems: "center", mt: 1 }}
@@ -284,7 +338,7 @@ export default function AddAccount() {
                     onClick={handleSubmit}
                     disabled={isSubmitting || !isValid}
                   >
-                    Add Account
+                    {variant === "add" ? "Add Account" : "Save changes"}
                   </Button>
                 </DialogActions>
               </>

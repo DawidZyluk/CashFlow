@@ -7,16 +7,26 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { IconButton } from "@mui/material";
-import { useDeleteAccountMutation, useGetAccountsQuery } from "../../store/accountsApiSlice";
+import {
+  useDeleteAccountMutation,
+  useGetAccountsQuery,
+} from "../../store/accountsApiSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setAccounts } from "../../store/authSlice";
+import { setAccounts, setEntries } from "../../store/authSlice";
+import { useGetEntriesQuery } from "../../store/entriesApiSlice";
+import toast from "react-hot-toast";
 
 export default function DeleteAccount({ id, name }) {
   const [open, setOpen] = React.useState(false);
-  const {data, refetch} = useGetAccountsQuery();
+  const { data, refetch } = useGetAccountsQuery();
+  const {
+    data: entries,
+    refetch: entriesRefetch,
+    isFetching,
+  } = useGetEntriesQuery();
   const [deleteAccount] = useDeleteAccountMutation();
-  const accounts = useSelector((state) => state.auth.accounts)
+  const accounts = useSelector((state) => state.auth.accounts);
   const dispatch = useDispatch();
 
   const handleClickOpen = () => {
@@ -28,10 +38,18 @@ export default function DeleteAccount({ id, name }) {
   };
 
   const handleDelete = async (id) => {
-    await deleteAccount(id);
-    refetch();
-    dispatch(setAccounts({ accounts: data?.accounts }));
-    setOpen(false);
+    try {
+      await deleteAccount(id);
+      refetch();
+      entriesRefetch();
+      dispatch(setEntries({ entries: entries?.entries }));
+      dispatch(setAccounts({ accounts: data?.accounts }));
+      setOpen(false);
+      toast.success("Account Deleted.")
+    } catch (error) {
+      console.log(error)
+      toast.error("Something went wrong. Try again.")
+    }
   };
 
   return (

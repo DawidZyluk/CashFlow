@@ -32,12 +32,15 @@ export default function RecentEntries() {
   const dispatch = useDispatch();
   const entries = useSelector((state) => state.auth.entries);
   const accounts = useSelector((state) => state.auth.accounts);
-
   const [deleteEntry] = useDeleteEntryMutation();
 
   const handleDelete = async (id) => {
-    await deleteEntry(id);
-    refetch();
+    try {
+      await deleteEntry(id);
+      refetch();
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   useEffect(() => {
@@ -50,7 +53,7 @@ export default function RecentEntries() {
     {
       field: "date",
       headerName: "Date",
-      flex: .8,
+      flex: 0.8,
       valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
     },
     {
@@ -61,7 +64,7 @@ export default function RecentEntries() {
       headerAlign: "left",
       type: "singleSelect",
       valueOptions: accounts?.map((obj) => obj.accountName),
-      valueGetter: (params) => params.value.accountName,
+      valueGetter: (params) => params.value?.accountName,
     },
     {
       field: "category",
@@ -83,21 +86,25 @@ export default function RecentEntries() {
       field: "createdAt",
       headerName: "Created at",
       flex: 1,
-      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
-      valueFormatter: (params) => dayjs(params.value, "DD/MM/YYYY, HH:mm:ss").format("DD/MM/YYYY, HH:mm"),
+      // valueGetter: (params) =>
+      //   dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
+      valueFormatter: (params) =>
+        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
     },
     {
       field: "updatedAt",
       headerName: "Updated at",
       flex: 1,
-      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
-      valueFormatter: (params) => dayjs(params.value, "DD/MM/YYYY, HH:mm:ss").format("DD/MM/YYYY, HH:mm"),
+      // valueGetter: (params) =>
+      //   dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
+      valueFormatter: (params) =>
+        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
     },
     {
       field: "actions",
       type: "actions",
       headerName: "Actions",
-      flex: .8,
+      flex: 0.8,
       cellClassName: "actions",
       getActions: ({ id }) => {
         return [

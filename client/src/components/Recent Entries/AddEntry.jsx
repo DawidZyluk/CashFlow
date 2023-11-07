@@ -68,12 +68,12 @@ export default function AddEntry({ variant = "add", id = null }) {
 
   const { data: entriesData, refetch: entriesRefetch } = useGetEntriesQuery();
 
-  useEffect(() => {
-    entriesRefetch();
-    refetch();
-    dispatch(setEntries({ entries: entriesData?.entries }));
-    //console.log(data?.entries[0]);
-  }, [data, entries, accounts]);
+  // useEffect(() => {
+  //   entriesRefetch();
+  //   refetch();
+  //   dispatch(setEntries({ entries: entriesData?.entries }));
+  //   //console.log(data?.entries[0]);
+  // }, [data, entries, accounts]);
 
   const handleClickOpen = () => {
     setDate(dayjs());
@@ -219,7 +219,7 @@ export default function AddEntry({ variant = "add", id = null }) {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error?.data?.message || "Something went wrong. Try again"}
+                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}
@@ -404,7 +404,7 @@ export default function AddEntry({ variant = "add", id = null }) {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error?.data?.message || "Something went wrong. Try again"}
+                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}

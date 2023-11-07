@@ -135,7 +135,6 @@ export const deleteAccount = asyncHandler(async (req, res) => {
   } else {
     res.status(404).json({ message: "Account not found" });
   }
-  console.log(account);
   res.status(201).json({
     message: "Account deleted"
   });

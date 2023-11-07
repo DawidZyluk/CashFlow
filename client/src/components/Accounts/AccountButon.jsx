@@ -185,7 +185,7 @@ const AccountButon = ({ account }) => {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error?.data?.message || "Something went wrong. Try again"}
+                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}
@@ -370,7 +370,7 @@ const AccountButon = ({ account }) => {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error?.data?.message || "Something went wrong. Try again"}
+                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}

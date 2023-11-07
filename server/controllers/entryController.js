@@ -7,6 +7,10 @@ import dayjs from "dayjs";
 export const addEntry = asyncHandler(async (req, res) => {
   const { accountId, date, value, category, note } = req.body;
   const userId = req.user._id;
+
+  const account = await Account.findOne({ _id: accountId });
+  if(!account) return res.status(400).json({ message: "Account Not Found" });
+  
   const entry = await Entry.create({
     userId,
     date,
@@ -17,7 +21,6 @@ export const addEntry = asyncHandler(async (req, res) => {
   });
 
   if (entry) {
-    const account = await Account.findOne({ _id: accountId });
     const { accountName } = account;
     account.balance += value;
     account.save();
@@ -115,6 +118,7 @@ export const updateEntry = asyncHandler(async (req, res) => {
 
   if (entry) {
     let account = await Account.findOne({ _id: entry.accountId });
+    if(!account) return res.status(400).json({ message: "Account Not Found" });
     let { accountName } = account;
     account.balance -= entry.value;
     account.save();
@@ -219,10 +223,11 @@ export const deleteEntry = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
   const entry = await Entry.findById(req.params.id);
-  const { date, value } = entry;
-
+  
   if (entry) {
+    const { date, value } = entry;
     const account = await Account.findOne({ _id: entry.accountId });
+    if(!account) return res.status(400).json({ message: "Account Not Found" });
     const { accountName } = account;
     account.balance -= value;
     account.save();

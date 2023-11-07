@@ -11,7 +11,7 @@ const AccountsList = () => {
   const { data, refetch, isFetching } = useGetAccountsQuery();
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.auth.accounts);
-
+  
   useEffect(() => {
     refetch();
     dispatch(setAccounts({ ...data }));
@@ -67,7 +67,7 @@ const AccountsList = () => {
               sx={{
                 mt: 1,
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr));",
                 gridAutoRows: "60px",
                 py: 1,
                 rowGap: 1,

@@ -149,7 +149,7 @@ export const LineChart = ({ allowControls = true }) => {
                 sx={{
                   ml: "auto",
                   display: "flex",
-                  width: "fit-content",
+                  // width: "fit-content",
                   flexDirection: "row",
                   border: 1,
                   borderRadius: 1,
@@ -195,8 +195,8 @@ export const LineChart = ({ allowControls = true }) => {
           <Box
             sx={{
               height: "440px",
-              width: isLoading ? 500 : chartWidth,
-              minWidth: 1040,
+              width: !isStepOpen ? "100%" : chartWidth,
+              // minWidth: 1040,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -206,7 +206,7 @@ export const LineChart = ({ allowControls = true }) => {
               <ResponsiveLine
                 data={chartState}
                 colors={{ datum: "color" }}
-                margin={{ top: 50, right: 50, bottom: 30, left: 150 }}
+                margin={{ top: 50, right: 50, bottom: 30, left: 70 }}
                 xScale={{ type: "point" }}
                 yScale={{
                   type: "linear",

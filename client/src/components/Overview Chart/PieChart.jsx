@@ -90,7 +90,6 @@ export const PieChart = () => {
     setAccountInfo(data);
   };
 
-  console.log(hasHorizontalSpace)
   return (
     <Card
       sx={{

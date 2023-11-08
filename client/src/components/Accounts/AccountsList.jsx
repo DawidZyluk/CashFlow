@@ -1,4 +1,11 @@
-import { Box, Button, Card, CircularProgress, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CircularProgress,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React, { useEffect } from "react";
 import AddAccount from "./AddAccount";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
@@ -14,7 +21,6 @@ const AccountsList = () => {
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
   const isNonSmallMobile = useMediaQuery("(min-width:900px)");
 
-  
   useEffect(() => {
     refetch();
     dispatch(setAccounts({ ...data }));
@@ -24,12 +30,17 @@ const AccountsList = () => {
   if (data) {
     sortedAccounts = [...data.accounts].sort((a, b) => b.balance - a.balance);
   }
-  console.log(isNonSmallMobile)
+
   return (
     <Card
       sx={{
-        gridColumn: isNonSmallMobile ? (isNonLaptopL ? "span 2" : "1/ 4") : ("span 6"),
-        gridRow: "span 4",
+        gridColumn: isNonSmallMobile
+          ? isNonLaptopL
+            ? "span 2"
+            : "1 / 4"
+          : "span 6",
+        gridRow: "1 / 3",
+        // gridRow: "span 4",
         p: 2,
         // my: 1,
         position: "relative",
@@ -64,25 +75,27 @@ const AccountsList = () => {
         <AddAccount />
       </Box>
       {!isFetching ? (
-        <>
+        <Box
+          sx={{
+            mt: 1,
+            maxHeight: "185px",
+            overflowY: "scroll",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            MsOverflowStyle: "none",
+            scrollbarWidth: "none",
+          }}
+        >
           {data?.accounts.length ? (
             <Box
               sx={{
-                mt: 1,
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr));",
-                gridAutoRows: "60px",
                 py: 1,
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr));",
+                gridAutoRows: "60px",
                 rowGap: 1,
                 columnGap: 1,
-                maxHeight: "465px",
-
-                overflowY: "scroll",
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-                MsOverflowStyle: "none",
-                scrollbarWidth: "none",
               }}
             >
               {sortedAccounts.map((account) => (
@@ -92,7 +105,7 @@ const AccountsList = () => {
           ) : (
             <NoAccounts />
           )}
-        </>
+        </Box>
       ) : (
         <Box
           sx={{

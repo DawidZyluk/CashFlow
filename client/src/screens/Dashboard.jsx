@@ -7,6 +7,7 @@ import RecentEntriesList from "../components/Recent Entries/RecentEntriesList";
 import AddEntry from "../components/Recent Entries/AddEntry";
 import { LineChart } from "../components/Overview Chart/LineChart";
 import { PieChart } from "../components/Overview Chart/PieChart";
+import Summary from "../components/Summary/Summary";
 
 const Dashboard = () => {
   const { verified } = useSelector((state) => state.auth.userInfo);
@@ -29,6 +30,7 @@ const Dashboard = () => {
         }}
       >
         {!verified && <Verification />}
+        <Summary />
         <AccountsList />
         <LineChart allowControls={false}/>
         <RecentEntriesList />

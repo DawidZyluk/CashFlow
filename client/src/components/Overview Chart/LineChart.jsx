@@ -62,7 +62,7 @@ export const LineChart = ({ allowControls = true }) => {
     const [mergedDays, sortedStats] = sortStats(data.stats);
     const years = sortedStats.map((stat) => stat.year);
     availableYears = years;
-
+    
     if (year !== "All" && month !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const monthData = getData(sortedStats, year, month);

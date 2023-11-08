@@ -88,6 +88,7 @@ export const LineChart = ({ allowControls = true }) => {
       }
       chartWidth = chartData.length * 40;
     }
+    console.log(chartWidth)
   }
 
   const chartState = useMemo(() => {
@@ -193,12 +194,12 @@ export const LineChart = ({ allowControls = true }) => {
           </>
         )}
       </Box>
-      <Box sx={{ height: "500px", overflowX: "auto" }}>
+      <Box sx={{ height: "480px", overflowX: "auto" }}>
         {isFetching || chartState[0].data.length ? (
           <Box
             sx={{
               height: "440px",
-              width: !isStepOpen ? "100%" : chartWidth,
+              width: !isStepOpen ? "100%" : chartWidth < 930 ? "100%" : chartWidth,
               // minWidth: 1040,
               display: "flex",
               justifyContent: "center",

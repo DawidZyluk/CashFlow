@@ -1,4 +1,3 @@
-2; // install (please try to align the version of installed @nivo packages)
 import {
   Box,
   Card,
@@ -20,6 +19,12 @@ export const PieChart = () => {
   const [accountInfo, setAccountInfo] = useState({});
   const theme = useTheme();
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
+  const isNonMobile = useMediaQuery("(min-width:1200px)");
+  const isNonSmallMobile = useMediaQuery("(min-width:900px)");
+  const isNonXSmallMobile = useMediaQuery("(min-width:480px)");
+  const isNotBetweenMobileAndSmall = isNonMobile == isNonSmallMobile;
+  // const hasHorizontalSpace = ((isNotBetweenMobileAndSmall << 1) + +isNonXSmallMobile);
+  const hasHorizontalSpace = (isNotBetweenMobileAndSmall && isNonXSmallMobile);
 
   let totalBalance = 0;
   let formatedData = [];
@@ -85,11 +90,12 @@ export const PieChart = () => {
     setAccountInfo(data);
   };
 
+  console.log(hasHorizontalSpace)
   return (
     <Card
       sx={{
-        gridColumn: "span 2",
-        gridRow: "span 4",
+        gridColumn: isNonSmallMobile ? (isNonLaptopL ? "span 2" : "4/ 7") : ("span 6"),
+        gridRow: isNonSmallMobile ? (isNonLaptopL ? "span 4" : "1 / 5") : '5 / 9',
         overflow: "visible",
         p: 2,
       }}
@@ -116,7 +122,7 @@ export const PieChart = () => {
             {formatedData[0] ? (
               <>
                 <Box
-                  sx={{ height: isNonLaptopL ? "100%" : "70%", width: "100%" }}
+                  sx={{ height: hasHorizontalSpace ? "100%" : "70%", width: "100%" }}
                 >
                   <ResponsivePie
                     data={formatedData || []}
@@ -127,7 +133,7 @@ export const PieChart = () => {
                       left: 0,
                     }}
                     sortByValue={true}
-                    innerRadius={isNonLaptopL ? 0.55 : 0.43}
+                    innerRadius={hasHorizontalSpace ? 0.55 : 0.43}
                     padAngle={2}
                     onMouseEnter={mouseEnterHandler}
                     animate={false}
@@ -157,7 +163,7 @@ export const PieChart = () => {
                     enableArcLinkLabels={false}
                   />
                 </Box>
-                {isNonLaptopL ? (
+                {hasHorizontalSpace ? (
                   <Box
                     sx={{
                       // border: 1,
@@ -239,10 +245,17 @@ export const PieChart = () => {
                       px: 3,
                       py: 2,
                       borderColor: "gray",
-                      width: "70%"
+                      width: "70%",
                     }}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", width: '100%' }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: 'center',
+                        width: "100%",
+                      }}
+                    >
                       <Box
                         sx={{
                           height: "1rem",
@@ -257,7 +270,7 @@ export const PieChart = () => {
                         sx={{
                           textAlign: "center",
                           // width: '100%',
-                          textOverflow: 'ellipsis',
+                          textOverflow: "ellipsis",
                           fontWeight: "bold",
                           color: theme.palette.grey[900],
                           fontSize: 18,

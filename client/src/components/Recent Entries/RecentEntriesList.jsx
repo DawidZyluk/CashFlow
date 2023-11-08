@@ -12,7 +12,7 @@ import {
   GridRowEditStopReasons,
   GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
-import { Card, Typography } from "@mui/material";
+import { Card, Typography, useMediaQuery } from "@mui/material";
 import AddEntry from "./AddEntry";
 import {
   useDeleteEntryMutation,
@@ -33,13 +33,15 @@ export default function RecentEntries() {
   const entries = useSelector((state) => state.auth.entries);
   const accounts = useSelector((state) => state.auth.accounts);
   const [deleteEntry] = useDeleteEntryMutation();
+  const isNonLaptopL = useMediaQuery("(min-width:1640px)");
+  const isNonMobile = useMediaQuery("(min-width:1200px)");
 
   const handleDelete = async (id) => {
     try {
       await deleteEntry(id);
       refetch();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -49,7 +51,74 @@ export default function RecentEntries() {
     //console.log(data?.entries[0]);
   }, [data, entries, accounts]);
 
-  const columns = [
+  const columns = isNonMobile ? [
+    {
+      field: "date",
+      headerName: "Date",
+      flex: 0.8,
+      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
+    },
+    {
+      field: "accountId",
+      headerName: "Account",
+      flex: 0.8,
+      align: "left",
+      headerAlign: "left",
+      type: "singleSelect",
+      valueOptions: accounts?.map((obj) => obj.accountName),
+      valueGetter: (params) => params.value?.accountName,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      flex: 0.8,
+      type: "singleSelect",
+      valueOptions: categories?.map((obj) => obj.name),
+    },
+    {
+      field: "value",
+      headerName: "Value",
+      type: "number",
+      flex: 0.6,
+      align: "left",
+      headerAlign: "left",
+      valueFormatter: (params) => currencyFormat(params.value),
+    },
+    {
+      field: "createdAt",
+      headerName: "Created at",
+      flex: 1,
+      valueFormatter: (params) =>
+        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
+    },
+    {
+      field: "updatedAt",
+      headerName: "Updated at",
+      flex: 1,
+      valueFormatter: (params) =>
+        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      flex: 0.8,
+      cellClassName: "actions",
+      getActions: ({ id }) => {
+        return [
+          <AddEntry variant="edit" id={id} />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={() => {
+              handleDelete(id);
+            }}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ] : [
     {
       field: "date",
       headerName: "Date",
@@ -83,24 +152,6 @@ export default function RecentEntries() {
       valueFormatter: (params) => currencyFormat(params.value),
     },
     {
-      field: "createdAt",
-      headerName: "Created at",
-      flex: 1,
-      // valueGetter: (params) =>
-      //   dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
-      valueFormatter: (params) =>
-        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
-    },
-    {
-      field: "updatedAt",
-      headerName: "Updated at",
-      flex: 1,
-      // valueGetter: (params) =>
-      //   dayjs(params.value).format("DD/MM/YYYY, HH:mm:ss"),
-      valueFormatter: (params) =>
-        dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
-    },
-    {
       field: "actions",
       type: "actions",
       headerName: "Actions",
@@ -122,8 +173,16 @@ export default function RecentEntries() {
     },
   ];
 
+
+
   return (
-    <Card sx={{ p: 2, gridColumn: "span 4", gridRow: "span 4" }}>
+    <Card
+      sx={{
+        p: 2,
+        gridColumn: isNonLaptopL ? "span 4" : "span 6",
+        gridRow: "span 4",
+      }}
+    >
       <Box
         sx={{
           display: "flex",

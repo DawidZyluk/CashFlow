@@ -8,6 +8,7 @@ import {
   Select,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
 
@@ -38,6 +39,8 @@ export const LineChart = ({ allowControls = true }) => {
   const [step, setStep] = useState(1);
   const accounts = useSelector((state) => state.auth.accounts)
   const theme = useTheme();
+  const isNonLaptopL = useMediaQuery("(min-width:1640px)");
+
 
   const { data, refetch, isFetching } = useGetStatsQuery();
   let availableYears = [];
@@ -117,7 +120,7 @@ export const LineChart = ({ allowControls = true }) => {
         p: 2,
         // my: 1,
         // height: "500px",
-        gridColumn: "span 4",
+        gridColumn: isNonLaptopL ? "span 4" : "span 6",
         gridRow: "span 4",
       }}
     >

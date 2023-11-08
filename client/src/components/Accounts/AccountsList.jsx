@@ -1,4 +1,4 @@
-import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, Card, CircularProgress, Typography, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import AddAccount from "./AddAccount";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
@@ -11,6 +11,9 @@ const AccountsList = () => {
   const { data, refetch, isFetching } = useGetAccountsQuery();
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.auth.accounts);
+  const isNonLaptopL = useMediaQuery("(min-width:1640px)");
+  const isNonSmallMobile = useMediaQuery("(min-width:900px)");
+
   
   useEffect(() => {
     refetch();
@@ -21,11 +24,11 @@ const AccountsList = () => {
   if (data) {
     sortedAccounts = [...data.accounts].sort((a, b) => b.balance - a.balance);
   }
-
+  console.log(isNonSmallMobile)
   return (
     <Card
       sx={{
-        gridColumn: "span 2",
+        gridColumn: isNonSmallMobile ? (isNonLaptopL ? "span 2" : "1/ 4") : ("span 6"),
         gridRow: "span 4",
         p: 2,
         // my: 1,

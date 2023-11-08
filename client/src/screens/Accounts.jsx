@@ -27,7 +27,7 @@ const Accounts = () => {
         sx={{
           display: "grid",
           gridGap: "20px",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
           // gridAutoRows: "10rem",
         }}
       >

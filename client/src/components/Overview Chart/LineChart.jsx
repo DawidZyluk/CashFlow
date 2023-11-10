@@ -37,10 +37,10 @@ export const LineChart = ({ allowControls = true }) => {
   const [isStepOpen, setIsStepOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
-  const accounts = useSelector((state) => state.auth.accounts)
+  const accounts = useSelector((state) => state.auth.accounts);
   const theme = useTheme();
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
-
+  const isNonSmallMobile = useMediaQuery("(min-width:500px)");
 
   const { data, refetch, isFetching } = useGetStatsQuery();
   let availableYears = [];
@@ -62,7 +62,7 @@ export const LineChart = ({ allowControls = true }) => {
     const [mergedDays, sortedStats] = sortStats(data.stats);
     const years = sortedStats.map((stat) => stat.year);
     availableYears = years;
-    
+
     if (year !== "All" && month !== "All") {
       let sum = calculateBalance(sortedStats, year, month);
       const monthData = getData(sortedStats, year, month);
@@ -88,7 +88,7 @@ export const LineChart = ({ allowControls = true }) => {
       }
       chartWidth = chartData.length * 40;
     }
-    console.log(chartWidth)
+    console.log(chartWidth);
   }
 
   const chartState = useMemo(() => {
@@ -125,7 +125,13 @@ export const LineChart = ({ allowControls = true }) => {
         gridRow: "span 4",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: isNonSmallMobile ? "row" : "column",
+        }}
+      >
         <Typography sx={{ my: 0 }} variant="h5">
           Overview Chart
         </Typography>
@@ -151,7 +157,8 @@ export const LineChart = ({ allowControls = true }) => {
             {(year === "All" || month === "All") && (
               <Box
                 sx={{
-                  ml: "auto",
+                  ml: isNonSmallMobile ? "auto" : undefined,
+                  mt: isNonSmallMobile ? undefined : 1,
                   display: "flex",
                   // width: "fit-content",
                   flexDirection: "row",
@@ -198,9 +205,13 @@ export const LineChart = ({ allowControls = true }) => {
         {isFetching || chartState[0].data.length ? (
           <Box
             sx={{
-              height: "440px",
-              width: !isStepOpen ? "100%" : chartWidth < 930 ? "100%" : chartWidth,
-              // minWidth: 1040,
+              height: isNonSmallMobile ? "440px" : "300px",
+              width: !isStepOpen
+                ? "100%"
+                : chartWidth < 930
+                ? "100%"
+                : chartWidth,
+              minWidth: 1040,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",

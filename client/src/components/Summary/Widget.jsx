@@ -1,27 +1,42 @@
-import { useTheme } from '@emotion/react'
-import { Box, Card, Typography } from '@mui/material'
-import React from 'react'
+import { useTheme } from "@emotion/react";
+import { Box, Card, Typography, useMediaQuery } from "@mui/material";
+import React from "react";
 
-const Widget = ({label, value}) => {
+const Widget = ({ label, value }) => {
   const theme = useTheme();
+  const isNonSmallMobile = useMediaQuery("(min-width:910px)");
 
   return (
     <Card
       sx={{
         p: 1,
         display: "flex",
-        flexDirection: "column",
+        flexDirection: isNonSmallMobile ? "column" : "row",
+        // flexDirection: 'column',
         alignItems: "center",
         justifyContent: "center",
         overflowX: "auto",
       }}
     >
-      <Typography sx={{ alignSelf: "flex-start", color: theme.palette.grey[800] }}>{label}</Typography>
-      <Box sx={{my: 'auto'}}>
-        <Typography variant="h4" sx={{color: theme.palette.grey[800]}}>{value}</Typography>
+      <Typography
+        sx={{
+          alignSelf: isNonSmallMobile ? "flex-start" : undefined,
+          color: theme.palette.grey[800],
+          mr: isNonSmallMobile ? 0 : 2
+        }}
+      >
+        {label}
+      </Typography>
+      <Box sx={{ my: "auto" }}>
+        <Typography
+          variant={isNonSmallMobile ? "h4" : "h6"}
+          sx={{ color: theme.palette.grey[800] }}
+        >
+          {value}
+        </Typography>
       </Box>
     </Card>
-  )
-}
+  );
+};
 
-export default Widget
+export default Widget;

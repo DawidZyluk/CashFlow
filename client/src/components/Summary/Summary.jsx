@@ -9,10 +9,11 @@ import { currencyFormat } from "../../utils/numbers";
 
 const Summary = () => {
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
-  const isNonSmallMobile = useMediaQuery("(min-width:900px)");
+  const isNonSmallMobile = useMediaQuery("(min-width:910px)");
   const { data, refetch, isFetching } = useGetStatsQuery();
   const { data: stats, refetch: accRefetch, isFetching: accIsFetching } = useGetAccountsQuery();
   const entries = useSelector((state) => state.auth.entries);
+
 
   let oldest = "";
   let latest = "";
@@ -46,8 +47,10 @@ const Summary = () => {
           display: "grid",
           gridGap: "20px",
           height: "100%",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gridTemplateRows: "1fr 1fr",
+          gridTemplateColumns: isNonSmallMobile ? "repeat(2, 1fr)" : undefined,
+          gridTemplateRows: isNonSmallMobile ? "1fr 1fr" : undefined,
+          // gridTemplateColumns: "repeat(2, 1fr)",
+          // gridTemplateRows: "1fr 1fr",
         }}
       >
         <Widget label="Total Balance:" value={currencyFormat(totalBalance)}/>

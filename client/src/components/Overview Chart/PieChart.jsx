@@ -20,7 +20,7 @@ export const PieChart = () => {
   const theme = useTheme();
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
   const isNonMobile = useMediaQuery("(min-width:1200px)");
-  const isNonSmallMobile = useMediaQuery("(min-width:900px)");
+  const isNonSmallMobile = useMediaQuery("(min-width:910px)");
   const isNonXSmallMobile = useMediaQuery("(min-width:480px)");
   const isNotBetweenMobileAndSmall = isNonMobile == isNonSmallMobile;
   // const hasHorizontalSpace = ((isNotBetweenMobileAndSmall << 1) + +isNonXSmallMobile);

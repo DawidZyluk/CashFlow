@@ -51,17 +51,19 @@ export default function RecentEntries() {
     //console.log(data?.entries[0]);
   }, [data, entries, accounts]);
 
-  const columns = isNonMobile ? [
+  const columns = [
     {
       field: "date",
       headerName: "Date",
       flex: 0.8,
+      minWidth: 100,
       valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
     },
     {
       field: "accountId",
       headerName: "Account",
       flex: 0.8,
+      minWidth: 100,
       align: "left",
       headerAlign: "left",
       type: "singleSelect",
@@ -72,6 +74,7 @@ export default function RecentEntries() {
       field: "category",
       headerName: "Category",
       flex: 0.8,
+      minWidth: 100,
       type: "singleSelect",
       valueOptions: categories?.map((obj) => obj.name),
     },
@@ -80,6 +83,7 @@ export default function RecentEntries() {
       headerName: "Value",
       type: "number",
       flex: 0.6,
+      minWidth: 100,
       align: "left",
       headerAlign: "left",
       valueFormatter: (params) => currencyFormat(params.value),
@@ -88,6 +92,7 @@ export default function RecentEntries() {
       field: "createdAt",
       headerName: "Created at",
       flex: 1,
+      minWidth: 100,
       valueFormatter: (params) =>
         dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
     },
@@ -95,6 +100,7 @@ export default function RecentEntries() {
       field: "updatedAt",
       headerName: "Updated at",
       flex: 1,
+      minWidth: 100,
       valueFormatter: (params) =>
         dayjs(params.value).format("DD/MM/YYYY, HH:mm"),
     },
@@ -103,59 +109,7 @@ export default function RecentEntries() {
       type: "actions",
       headerName: "Actions",
       flex: 0.8,
-      cellClassName: "actions",
-      getActions: ({ id }) => {
-        return [
-          <AddEntry variant="edit" id={id} />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={() => {
-              handleDelete(id);
-            }}
-            color="inherit"
-          />,
-        ];
-      },
-    },
-  ] : [
-    {
-      field: "date",
-      headerName: "Date",
-      flex: 0.8,
-      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
-    },
-    {
-      field: "accountId",
-      headerName: "Account",
-      flex: 0.8,
-      align: "left",
-      headerAlign: "left",
-      type: "singleSelect",
-      valueOptions: accounts?.map((obj) => obj.accountName),
-      valueGetter: (params) => params.value?.accountName,
-    },
-    {
-      field: "category",
-      headerName: "Category",
-      flex: 0.8,
-      type: "singleSelect",
-      valueOptions: categories?.map((obj) => obj.name),
-    },
-    {
-      field: "value",
-      headerName: "Value",
-      type: "number",
-      flex: 0.8,
-      align: "left",
-      headerAlign: "left",
-      valueFormatter: (params) => currencyFormat(params.value),
-    },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      flex: 0.8,
+      minWidth: 100,
       cellClassName: "actions",
       getActions: ({ id }) => {
         return [
@@ -172,8 +126,6 @@ export default function RecentEntries() {
       },
     },
   ];
-
-
 
   return (
     <Card
@@ -200,6 +152,7 @@ export default function RecentEntries() {
           mt: 2,
           height: 450,
           width: "100%",
+
           "& .actions": {
             color: "text.secondary",
           },

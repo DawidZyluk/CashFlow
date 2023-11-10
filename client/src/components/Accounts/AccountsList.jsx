@@ -19,7 +19,7 @@ const AccountsList = () => {
   const dispatch = useDispatch();
   const accounts = useSelector((state) => state.auth.accounts);
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
-  const isNonSmallMobile = useMediaQuery("(min-width:900px)");
+  const isNonSmallMobile = useMediaQuery("(min-width:910px)");
 
   useEffect(() => {
     refetch();

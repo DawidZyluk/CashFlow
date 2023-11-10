@@ -55,7 +55,7 @@ const LoggedInLinks = ({ userInfo }) => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <CoinAvatar initials={`${userInfo.name[0]}`} />
+            <CoinAvatar initials={`${userInfo.name[0]}`} sx={{diameter: '40px'}}/>
           </IconButton>
         </Tooltip>
       </Box>

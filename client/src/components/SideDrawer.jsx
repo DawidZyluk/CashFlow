@@ -43,7 +43,7 @@ export default function SideDrawer() {
         edge="start"
         color="inherit"
         aria-label="menu"
-        sx={{ mr: 2 }}
+        sx={{ mr: 0 }}
         onClick={toggleDrawer()}
       >
         <Menu />

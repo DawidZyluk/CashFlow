@@ -17,18 +17,34 @@ export default function Header() {
       <AppBar position="static">
         <Toolbar>
           {userInfo && <SideDrawer />}
-          <Box component="img" alt="logo" src="/logo.png" sx={{
-            width: "2rem",
-            mr: .4
-          }}/>
-          <Typography
-            variant="h6"
+          <Box
             component={Link}
-            to= {userInfo ? "/dashboard" : '/'}
-            sx={{ textDecoration: "none", color: "white", marginRight: "auto" }}
+            to={userInfo ? "/dashboard" : "/"}
+            sx={{
+              display: 'flex',
+              textDecoration: "none",
+              marginRight: "auto",
+            }}
           >
-            CashFlow
-          </Typography>
+            <Box
+              component="img"
+              alt="logo"
+              src="/logo.png"
+              sx={{
+                width: "2rem",
+                mr: 0.4,
+              }}
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                textDecoration: "none",
+                color: "white",
+              }}
+            >
+              CashFlow
+            </Typography>
+          </Box>
           {userInfo ? (
             <LoggedInLinks userInfo={userInfo} />
           ) : (

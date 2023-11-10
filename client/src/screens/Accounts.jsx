@@ -1,4 +1,4 @@
-import { Box, Card, IconButton, Typography } from "@mui/material";
+import { Box, Card, IconButton, Typography, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { currencyFormat } from "../utils/numbers";
@@ -13,13 +13,16 @@ const Accounts = () => {
   const { data, refetch } = useGetAccountsQuery();
   const accounts = useSelector((state) => state.auth.accounts);
   const dispatch = useDispatch();
+  const isNonMobile = useMediaQuery("(min-width:1210px)");
+  const isNonXSmallMobile = useMediaQuery("(min-width:410px)");
 
   useEffect(() => {
     refetch();
     dispatch(setAccounts({ accounts: data?.accounts }));
   }, [data, accounts])
+
   return (
-    <Box sx={{ mx: 17, my: 5, mb: 10 }}>
+    <Box sx={{ mx: isNonMobile ? 17 : 5, my: 5, mb: 10 }}>
       <Typography sx={{ my: 2 }} variant="h4">
         Accounts
       </Typography>
@@ -27,7 +30,8 @@ const Accounts = () => {
         sx={{
           display: "grid",
           gridGap: "20px",
-          gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+          justifyContent: 'center',
+          gridTemplateColumns: isNonXSmallMobile ? "repeat(auto-fill, minmax(340px, 1fr))" : "repeat(auto-fill, minmax(180px, 1fr))",
           // gridAutoRows: "10rem",
         }}
       >

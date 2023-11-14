@@ -88,7 +88,6 @@ export const LineChart = ({ allowControls = true }) => {
       }
       chartWidth = chartData.length * 40;
     }
-    console.log(chartWidth);
   }
 
   const chartState = useMemo(() => {

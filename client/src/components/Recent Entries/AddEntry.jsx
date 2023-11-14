@@ -155,7 +155,7 @@ export default function AddEntry({ variant = "add", id = null }) {
     category: "Salary",
     note: "",
   };
-  
+
   if (entryData) {
     const { date, value, accountId, category, note } = entryData;
     initialValues = {
@@ -197,9 +197,9 @@ export default function AddEntry({ variant = "add", id = null }) {
         </IconButton>
       )}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ ml: 1, }}>Entry Details</DialogTitle>
+        <DialogTitle sx={{ ml: 1 }}>Entry Details</DialogTitle>
         {variant !== "edit" && (
-          <Tabs value={tab} onChange={handleTabChange} sx={{mb: 1}} centered>
+          <Tabs value={tab} onChange={handleTabChange} sx={{ mb: 1 }} centered>
             <Tab label="Create Entry" />
             <Tab label="Update Account" />
           </Tabs>
@@ -219,7 +219,9 @@ export default function AddEntry({ variant = "add", id = null }) {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
+                  {error.status !== 500
+                    ? error?.data?.message
+                    : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}
@@ -263,6 +265,7 @@ export default function AddEntry({ variant = "add", id = null }) {
                         label="Date"
                         id="date"
                         autoComplete="date"
+                        views={["year", "month", "day"]}
                         onBlur={handleBlur}
                         onChange={(value) => setDate(value)}
                         value={variant === "edit" ? dayjs(values.date) : date}
@@ -404,7 +407,9 @@ export default function AddEntry({ variant = "add", id = null }) {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
+                  {error.status !== 500
+                    ? error?.data?.message
+                    : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}

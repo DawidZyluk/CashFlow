@@ -83,7 +83,7 @@ export function sortStats(stats) {
   sortedStats.sort(function (a, b) {
     return new Date(b.year) - new Date(a.year);
   });
-
+  console.log(sortedStats)
   const sortedMergedDays = Object.fromEntries(
     Object.entries(mergedDays).sort(function (a, b) {
       return (
@@ -103,6 +103,8 @@ export function calculateBalance(sortedStats, year, month) {
     (acc, curr) => acc + curr.totalBalance,
     0
   );
+  // console.log(yearsBefore)
+  // console.log(previousBalance)
   let sum = previousBalance;
   if (month !== "All") {
     const goalMonth = dayjs(`${month}, ${chosenYear.year}`).format(
@@ -159,10 +161,10 @@ export function formatData(data, sum, step = 1) {
 
   if (step !== 1) {
     let withStep = [];
-    for (let i = 0; i < formatedData.length; i++) {
-      if (i % step == 0) {
-        withStep.push({ x: formatedData[i].x, y: formatedData[i].y });
-      }
+    for (let i = 0; i < formatedData.length; i += step) {
+      const slice = formatedData.slice(i, i + step);
+      const sum = slice.reduce((acc, curr) => acc + curr.y, 0);
+      withStep.push({ x: formatedData[i].x, y: sum / slice.length });
     }
     formatedData = withStep;
   }
@@ -171,7 +173,5 @@ export function formatData(data, sum, step = 1) {
 }
 
 export function pieFormat(data) {
-  
-
   return formatedData;
 }

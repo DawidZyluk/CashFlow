@@ -229,6 +229,7 @@ const AccountButon = ({ account }) => {
                         label="Date"
                         id="date"
                         autoComplete="date"
+                        views={["year", "month", "day"]}
                         onBlur={handleBlur}
                         onChange={(value) => setDate(value)}
                         value={date}

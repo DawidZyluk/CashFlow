@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
 import { useTheme } from "@emotion/react";
 import { currencyFormat } from "../../utils/numbers";
+import { useSelector } from "react-redux";
 
 export const PieChart = () => {
   const { data: stats, refetch, isFetching } = useGetAccountsQuery();
@@ -25,6 +26,7 @@ export const PieChart = () => {
   const isNotBetweenMobileAndSmall = isNonMobile == isNonSmallMobile;
   // const hasHorizontalSpace = ((isNotBetweenMobileAndSmall << 1) + +isNonXSmallMobile);
   const hasHorizontalSpace = (isNotBetweenMobileAndSmall && isNonXSmallMobile);
+  const entries = useSelector((state) => state.auth.entries);
 
   let totalBalance = 0;
   let formatedData = [];
@@ -49,7 +51,7 @@ export const PieChart = () => {
   useEffect(() => {
     setAccountInfo({ ...formatedData[0] });
     refetch();
-  }, [stats]);
+  }, [stats, entries]);
 
   const tooltip = ({ datum }) => {
     return (

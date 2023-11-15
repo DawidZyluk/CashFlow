@@ -19,6 +19,7 @@ const Dashboard = () => {
       <Typography sx={{ my: 2, }} variant="h4">
         Dashboard
       </Typography>
+        {!verified && <Verification />}
       <Box
         sx={{
           display: "grid",
@@ -29,7 +30,6 @@ const Dashboard = () => {
           gridAutoRows: '120px'
         }}
       >
-        {!verified && <Verification />}
         <Summary />
         <AccountsList />
         <LineChart allowControls={false}/>

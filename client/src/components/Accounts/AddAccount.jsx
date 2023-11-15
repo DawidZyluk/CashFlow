@@ -227,7 +227,7 @@ export default function AddAccount({ variant = "add", id = null }) {
                     sx={{
                       height: "56px",
                       color: "white",
-                      gridColumn: "span 2",
+                      gridColumn: isNonMobile ? "span 2" : 'span 4',
                       bgcolor: color,
                       //justifyContent: 'flex-start',
                       "&:hover": {
@@ -243,8 +243,8 @@ export default function AddAccount({ variant = "add", id = null }) {
                     sx={{
                       position: "absolute",
                       zIndex: 2,
-                      top: "130px",
-                      right: "40px",
+                      top: isNonMobile ? "130px" : '200px',
+                      right: "30px",
                     }}
                   >
                     {isDialogOpen && (

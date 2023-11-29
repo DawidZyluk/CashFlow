@@ -57,7 +57,8 @@ export default function RecentEntries() {
       headerName: "Date",
       flex: 0.8,
       minWidth: 100,
-      valueGetter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
+      valueFormatter: (params) =>
+        dayjs(params.value).format("DD/MM/YYYY"),
     },
     {
       field: "accountId",

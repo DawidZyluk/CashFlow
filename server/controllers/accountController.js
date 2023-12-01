@@ -67,14 +67,16 @@ export const addAccount = asyncHandler(async (req, res) => {
     stats.save();
   }
 
-  await Entry.create({
-    userId,
-    date: new Date().toISOString(),
-    value: balance,
-    accountId: account._id,
-    category: "Account Initial Value",
-    note: "",
-  });
+  if (balance !== 0) {
+    await Entry.create({
+      userId,
+      date: new Date().toISOString(),
+      value: balance,
+      accountId: account._id,
+      category: "Account Initial Value",
+      note: "",
+    });
+  }
 
   if (account) {
     res.status(201).json({
@@ -136,6 +138,6 @@ export const deleteAccount = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "Account not found" });
   }
   res.status(201).json({
-    message: "Account deleted"
+    message: "Account deleted",
   });
 });

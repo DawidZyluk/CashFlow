@@ -8,9 +8,18 @@ import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { toast } from "react-hot-toast";
-import { Card } from "@mui/material";
-import { useUpdateMutation } from "../store/usersApiSlice";
-import { setLogin } from "../store/authSlice";
+import {
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { useDeleteMutation, useUpdateMutation } from "../store/usersApiSlice";
+import { setLogin, setLogout } from "../store/authSlice";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const registerSchema = yup.object().shape({
   name: yup.string().required("Required"),
@@ -26,9 +35,13 @@ const registerSchema = yup.object().shape({
 export default function Profile() {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState("");
 
   const [update, { error }] = useUpdateMutation();
   const { userInfo } = useSelector((state) => state.auth);
+  const [deleteUser, {error: userError}] = useDeleteMutation();
 
   const initialValues = {
     name: userInfo.name,
@@ -37,12 +50,34 @@ export default function Profile() {
     confirmPassword: "",
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleSubmit = async (values, onSubmitProps) => {
     try {
       const res = await update(values).unwrap();
-      dispatch(setLogin({...userInfo, ...res }));
+      dispatch(setLogin({ ...userInfo, ...res }));
       toast.success("Profile Updated!");
     } catch (err) {
+      toast.error("Profile can't be updated. Try again later");
+      //console.log(err?.data?.message || err.error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      dispatch(setLogout())
+      await deleteUser({password}).unwrap();
+      navigate("/");
+      toast.success("Account deleted successfully!")
+    } catch (err) {
+      console.log(err)
+      toast.error(err?.data?.message ||"Profile can't be deleted");
       //console.log(err?.data?.message || err.error);
     }
   };
@@ -53,8 +88,7 @@ export default function Profile() {
         sx={{
           boxShadow: 3,
           borderRadius: 2,
-          px: 4,
-          py: 6,
+          p: 4,
           marginTop: 8,
           display: "flex",
           flexDirection: "column",
@@ -172,7 +206,50 @@ export default function Profile() {
             </Box>
           )}
         </Formik>
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={handleClickOpen}
+          sx={{
+            bgcolor: theme.palette.error[400],
+            "&:hover": { bgcolor: theme.palette.error[500] },
+          }}
+        >
+          Delete Account
+        </Button>
       </Card>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This action is irreversible, and all your data will be permanently
+            lost.
+          </DialogContentText>
+          <Box sx={{mt: 2}}>
+            <Typography>Enter your password to delete account:</Typography>
+            <TextField
+              size="small"
+              fullWidth
+              name="password"
+              label="password"
+              type="password"
+              sx={{mt: 1.2}}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              handleDelete();
+            }}
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }

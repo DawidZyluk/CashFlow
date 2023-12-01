@@ -34,6 +34,7 @@ import { setAccounts } from "../../store/authSlice";
 import { useState } from "react";
 import useDialog from "../../hooks/useDialog";
 import { adjustFontColor } from "../../utils/adjustFontColor";
+import { accountTypes } from "./accountTypes";
 
 export default function AddAccount({ variant = "add", id = null }) {
   const [open, setOpen] = useState(false);
@@ -128,7 +129,7 @@ export default function AddAccount({ variant = "add", id = null }) {
 
   const handleClickOpen = () => {
     setOpen(true);
-    setColor(accountData.account.color || "#0b8043");
+    setColor(accountData?.account?.color || "#0b8043");
   };
 
   const handleClose = () => {
@@ -302,12 +303,7 @@ export default function AddAccount({ variant = "add", id = null }) {
                         Boolean(errors.accountType)
                       }
                     >
-                      <MenuItem value="main">Main</MenuItem>
-                      <MenuItem value="cash">Cash</MenuItem>
-                      <MenuItem value="credit card">Credit Card</MenuItem>
-                      <MenuItem value="debit card">Debit Card</MenuItem>
-                      <MenuItem value="savings">Savings</MenuItem>
-                      <MenuItem value="investment">Investment</MenuItem>
+                    {accountTypes.map(({id, name}) => <MenuItem key={id} value={name}>{name}</MenuItem>)}
                     </Select>
                     <FormHelperText sx={{ color: "error.main" }}>
                       {touched.accountType && errors.accountType}

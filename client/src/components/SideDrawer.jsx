@@ -33,7 +33,7 @@ export default function SideDrawer() {
   const tabList = [
     { name: "Dashboard", path: '/dashboard', icon: <Home /> },
     { name: "My Accounts", path: '/accounts', icon: <AccountBalanceWallet /> },
-    { name: "Categories", path: '/#', icon: <Widgets /> },
+    { name: "Categories", path: '/categories', icon: <Widgets /> },
   ];
 
   return (

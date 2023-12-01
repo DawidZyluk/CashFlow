@@ -32,7 +32,7 @@ const Accounts = () => {
           gridGap: "20px",
           justifyContent: 'center',
           gridTemplateColumns: isNonXSmallMobile ? "repeat(auto-fill, minmax(340px, 1fr))" : "repeat(auto-fill, minmax(180px, 1fr))",
-          // gridAutoRows: "10rem",
+          gridAutoRows: "9rem",
         }}
       >
         {data?.accounts.map((account) => {
@@ -63,6 +63,7 @@ const Accounts = () => {
                   <DeleteAccount id={account._id} name={account.accountName}/>
                 </Box>
               </Box>
+              <Typography >{account.accountType}</Typography>
               <Typography
                 sx={{
                   fontWeight: "light",
@@ -75,7 +76,6 @@ const Accounts = () => {
               >
                 {account.accountNumber}
               </Typography>
-              <Typography >{account.accountType}</Typography>
               <Typography sx={{ fontSize: 20, textAlign: "right", mt: 'auto' }}>
                 {currencyFormat(account.balance)}
               </Typography>

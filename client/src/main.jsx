@@ -23,6 +23,7 @@ import PasswordReset from "./screens/PasswordReset.jsx";
 import VerifyAccount from "./screens/VerifyAccount";
 import Dashboard from "./screens/Dashboard.jsx";
 import Accounts from "./screens/Accounts";
+import Categories from "./screens/Categories.jsx";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
           {
             path: "accounts",
             element: <Accounts />,
+          },
+          {
+            path: "categories",
+            element: <Categories />,
           },
         ],
       },

@@ -83,7 +83,6 @@ export function sortStats(stats) {
   sortedStats.sort(function (a, b) {
     return new Date(b.year) - new Date(a.year);
   });
-  console.log(sortedStats)
   const sortedMergedDays = Object.fromEntries(
     Object.entries(mergedDays).sort(function (a, b) {
       return (

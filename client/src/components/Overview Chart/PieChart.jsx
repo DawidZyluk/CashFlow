@@ -7,8 +7,6 @@ import {
 } from "@mui/material";
 // yarn add @nivo/pie
 import { ResponsivePie } from "@nivo/pie";
-import { useGetStatsQuery } from "../../store/statsApiSlice";
-import { sortStats } from "./sortingFunctions";
 import { useEffect, useState } from "react";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
 import { useTheme } from "@emotion/react";

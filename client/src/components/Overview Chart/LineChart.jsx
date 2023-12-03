@@ -18,17 +18,18 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import dayjs from "dayjs";
 import {
   calculateBalance,
+  createStats,
   formatData,
   getData,
   sortStats,
 } from "./sortingFunctions";
 import YearPicker from "./YearPicker";
 import MonthPicker from "./MonthPicker";
-import { useGetStatsQuery } from "../../store/statsApiSlice";
 import StepPicker from "./StepPicker";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import NoChartData from "./NoChartData";
+import { useGetEntriesQuery } from "../../store/entriesApiSlice";
 
 export const LineChart = ({ allowControls = true }) => {
   const [year, setYear] = useState("All");
@@ -42,7 +43,7 @@ export const LineChart = ({ allowControls = true }) => {
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
   const isNonSmallMobile = useMediaQuery("(min-width:500px)");
 
-  const { data, refetch, isFetching } = useGetStatsQuery();
+  const { data, refetch, isFetching } = useGetEntriesQuery();
   let availableYears = [];
   let chartData = [];
   let areaBaseline = 0;
@@ -52,15 +53,18 @@ export const LineChart = ({ allowControls = true }) => {
   useEffect(() => {
     setIsLoading(true);
     refetch();
-  }, [data, step, year, entries, accounts]);
+  }, [data, step, year, entries, accounts, month]);
 
   setTimeout(() => {
     setIsLoading(false);
   }, 1000);
 
   if (data) {
-    const [mergedDays, sortedStats] = sortStats(data.stats);
-    const years = sortedStats.map((stat) => stat.year);
+    const mergedDays = sortStats(data.entries);
+    const sortedStats = createStats(mergedDays);
+    // console.log(Object.fromEntries(Object.entries(sortedStats)))
+    // console.log(Object.entries(sortedStats))
+    const years = Object.entries(sortedStats).map(([year]) => year).reverse();
     availableYears = years;
 
     if (year !== "All" && month !== "All") {
@@ -73,6 +77,7 @@ export const LineChart = ({ allowControls = true }) => {
       const yearData = getData(sortedStats, year, month);
       areaBaseline = sum + yearData[0][1];
       chartData = formatData(yearData, sum, step);
+      // console.log(chartData)
       if (chartData.length > 30 && !isStepOpen) {
         newStep = Math.ceil(chartData.length / 25);
         chartData = formatData(yearData, sum, newStep);

@@ -1,8 +1,6 @@
 import { Box, Card, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useGetStatsQuery } from "../../store/statsApiSlice";
-import { sortStats } from "../Overview Chart/sortingFunctions";
 import Widget from "./Widget";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
 import { currencyFormat } from "../../utils/numbers";
@@ -10,7 +8,6 @@ import { currencyFormat } from "../../utils/numbers";
 const Summary = () => {
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
   const isNonSmallMobile = useMediaQuery("(min-width:910px)");
-  const { data, refetch, isFetching } = useGetStatsQuery();
   const { data: stats, refetch: accRefetch, isFetching: accIsFetching } = useGetAccountsQuery();
   const entries = useSelector((state) => state.auth.entries);
 
@@ -18,13 +15,6 @@ const Summary = () => {
   let oldest = "";
   let latest = "";
 
-  if (data) {
-    const [mergedDays, sortedStats] = sortStats(data.stats);
-    const timestamps = Array.from(Object.keys(mergedDays));
-
-    oldest = timestamps[0];
-    latest = timestamps[timestamps.length - 1];
-  }
 
   let totalBalance = 0;
   if (stats) {

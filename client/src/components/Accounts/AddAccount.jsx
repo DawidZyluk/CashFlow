@@ -112,7 +112,7 @@ export default function AddAccount({ variant = "add", id = null }) {
   let initialValues = {
     accountName: "",
     accountNumber: "",
-    accountType: "cash",
+    accountType: "Cash",
     balance: 0,
   };
 

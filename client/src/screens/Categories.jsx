@@ -57,7 +57,7 @@ const Categories = () => {
               }}
             >
               {examples.map((example) => (
-                <Box sx={{ display: "flex", alignItems: "center", my: 0.3 }}>
+                <Box key={Math.random()} sx={{ display: "flex", alignItems: "center", my: 0.3 }}>
                   <FiberManualRecordIcon
                     sx={{
                       fontSize: 12,

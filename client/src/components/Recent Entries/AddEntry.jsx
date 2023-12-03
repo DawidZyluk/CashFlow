@@ -66,15 +66,6 @@ export default function AddEntry({ variant = "add", id = null }) {
   let entryData;
   let entryRefetch;
 
-  const { data: entriesData, refetch: entriesRefetch } = useGetEntriesQuery();
-
-  // useEffect(() => {
-  //   entriesRefetch();
-  //   refetch();
-  //   dispatch(setEntries({ entries: entriesData?.entries }));
-  //   //console.log(data?.entries[0]);
-  // }, [data, entries, accounts]);
-
   const handleClickOpen = () => {
     setDate(dayjs());
     setTab(0);
@@ -91,7 +82,7 @@ export default function AddEntry({ variant = "add", id = null }) {
     entryRefetch = refetch;
   }
 
-  const handleSubmit = async (values, onSubmitProps) => {
+  const handleAdd = async (values, onSubmitProps) => {
     try {
       if (tab) {
         const account = accounts.find((o) => o._id == values.accountId);
@@ -123,7 +114,6 @@ export default function AddEntry({ variant = "add", id = null }) {
         ...values,
         date: date.format(),
       }).unwrap();
-      dispatch(setEntries({ entries: [...entries, res] }));
       refetch();
       entryRefetch();
       dispatch(setAccounts({ ...data }));
@@ -227,7 +217,7 @@ export default function AddEntry({ variant = "add", id = null }) {
             )}
             <Formik
               validateOnBlur={false}
-              onSubmit={variant == "add" ? handleSubmit : handleEdit}
+              onSubmit={variant == "add" ? handleAdd : handleEdit}
               initialValues={initialValues}
               validationSchema={entrySchema}
             >
@@ -415,7 +405,7 @@ export default function AddEntry({ variant = "add", id = null }) {
             )}
             <Formik
               validateOnBlur={false}
-              onSubmit={handleSubmit}
+              onSubmit={handleAdd}
               initialValues={initialValues}
               validationSchema={entrySchema}
             >

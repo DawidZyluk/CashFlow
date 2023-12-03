@@ -10,5 +10,4 @@ export function adjustFontColor(color) {
   if (luma < 40) {
     // pick a different colour
   }
-  console.log(r, g, b)
 }

@@ -55,18 +55,12 @@ export function calculateBalance(sortedStats, year, month) {
   let sum = previousBalance;
 
   if (month !== "All") {
-    const goalMonth = dayjs(`${month}, ${year}`).format(
-      "DD/MM/YYYY"
-    );
-    const monthsBefore = Object.entries(data.monthlyData).filter(
-      ([curr]) => {
-        const currMonth = dayjs(`${curr}, ${year}`).format(
-          "DD/MM/YYYY"
-          );
-          
-          return currMonth < goalMonth;
-        }
-        );
+    const goalMonth = dayjs(`${month}, ${year}`).format("DD/MM/YYYY");
+    const monthsBefore = Object.entries(data.monthlyData).filter(([curr]) => {
+      const currMonth = dayjs(`${curr}, ${year}`).format("DD/MM/YYYY");
+
+      return currMonth < goalMonth;
+    });
     const previousMonthsBalance = monthsBefore.reduce(
       (acc, curr) => acc + curr[1],
       0
@@ -81,14 +75,11 @@ export function calculateBalance(sortedStats, year, month) {
 export function getData(sortedStats, year, month) {
   sortedStats = Object.entries(sortedStats);
   const chosenYear = sortedStats.filter(([sYear]) => sYear == year)[0];
-  // console.log(chosenYear);
   const [_, data] = chosenYear;
   let res = Object.entries(data.dailyData);
 
   if (month !== "All") {
-    const goalMonth = dayjs(`${month}, ${year}`).format(
-      "DD/MM/YYYY"
-    );
+    const goalMonth = dayjs(`${month}, ${year}`).format("DD/MM/YYYY");
 
     res = Object.entries(data.dailyData).filter(([date]) => {
       const formatedMonth = dayjs(goalMonth, "DD/MM/YYYY").format();
@@ -102,14 +93,12 @@ export function getData(sortedStats, year, month) {
 }
 
 export function formatData(data, sum, step = 1) {
-  // console.log(sum)
   let formatedData = data.map(([date, value], i) => {
     return {
       x: date,
       y: (sum += value),
     };
   });
-  // console.log("formatedData 1", formatedData)
 
   if (step !== 1) {
     let withStep = [];
@@ -120,8 +109,6 @@ export function formatData(data, sum, step = 1) {
     }
     formatedData = withStep;
   }
-  // console.log("formatedData 2", formatedData)
 
-  // console.log(formatedData)
   return formatedData;
 }

@@ -62,8 +62,6 @@ export const LineChart = ({ allowControls = true }) => {
   if (data) {
     const mergedDays = sortStats(data.entries);
     const sortedStats = createStats(mergedDays);
-    // console.log(Object.fromEntries(Object.entries(sortedStats)))
-    // console.log(Object.entries(sortedStats))
     const years = Object.entries(sortedStats).map(([year]) => year).reverse();
     availableYears = years;
 
@@ -77,7 +75,6 @@ export const LineChart = ({ allowControls = true }) => {
       const yearData = getData(sortedStats, year, month);
       areaBaseline = sum + yearData[0][1];
       chartData = formatData(yearData, sum, step);
-      // console.log(chartData)
       if (chartData.length > 30 && !isStepOpen) {
         newStep = Math.ceil(chartData.length / 25);
         chartData = formatData(yearData, sum, newStep);

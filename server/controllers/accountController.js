@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import Account from "../models/accountModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import OverallStats from "../models/overallStatsModel.js";
 import Entry from "../models/entryModel.js";
 
 export const addAccount = asyncHandler(async (req, res) => {
@@ -16,56 +15,6 @@ export const addAccount = asyncHandler(async (req, res) => {
     accountType,
     balance,
   });
-
-  const year = dayjs().year();
-  const month = dayjs().format("MMMM");
-  const day = dayjs().format("DD/MM/YYYY");
-
-  const stats = await OverallStats.findOne({ userId, year });
-
-  if (!stats) {
-    await OverallStats.create({
-      userId,
-      year,
-      totalBalance: balance,
-      accounts: { [accountName]: balance },
-      monthlyData: {
-        [month]: {
-          totalBalance: balance,
-          accounts: { [accountName]: balance },
-        },
-      },
-      dailyData: {
-        [day]: balance,
-      },
-    });
-  } else {
-    let { accounts, monthlyData, dailyData } = stats;
-    const currAccount = accounts.get(accountName);
-    const currMonth = monthlyData.get(month);
-    stats.totalBalance += balance;
-    if (currAccount) accounts.set(accountName, currAccount + balance);
-    else accounts.set(accountName, balance);
-    if (currMonth) {
-      currMonth.totalBalance += balance;
-      if (currMonth.accounts.get(accountName)) {
-        monthlyData
-          .get(month)
-          .accounts.set(
-            accountName,
-            currMonth.accounts.get(accountName) + balance
-          );
-      } else currMonth.accounts.set(accountName, balance);
-    } else {
-      monthlyData.set(month, {
-        totalBalance: balance,
-        accounts: { [accountName]: balance },
-      });
-    }
-    if (dailyData.get(day)) dailyData.set(day, dailyData.get(day) + balance);
-    else dailyData.set(day, balance);
-    stats.save();
-  }
 
   if (balance !== 0) {
     await Entry.create({

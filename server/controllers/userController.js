@@ -9,7 +9,6 @@ import { sendEmail } from "../utils/sendEmail.js";
 import { createToken } from "../utils/createToken.js";
 import Entry from "../models/entryModel.js";
 import Account from "../models/accountModel.js";
-import OverallStats from "../models/overallStatsModel.js";
 
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -75,7 +74,6 @@ export const deleteProfile = asyncHandler(async (req, res) => {
   if (user && (await bcrypt.compare(password, user.password))) {
     await Entry.deleteMany({ userId: _id });
     await Account.deleteMany({ userId: _id });
-    await OverallStats.deleteMany({ userId: _id });
     await User.deleteOne({ _id })
     res.status(200).json({ message: "User Deleted" });
   } else {

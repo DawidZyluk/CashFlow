@@ -5,10 +5,12 @@ import Widget from "./Widget";
 import { useGetAccountsQuery } from "../../store/accountsApiSlice";
 import { currencyFormat } from "../../utils/numbers";
 import { sortStats } from "../Overview Chart/sortingFunctions";
+import { useGetEntriesQuery } from "../../store/entriesApiSlice";
 
 const Summary = () => {
   const isNonLaptopL = useMediaQuery("(min-width:1640px)");
   const isNonSmallMobile = useMediaQuery("(min-width:910px)");
+  const { data, refetch, isFetching } = useGetEntriesQuery();
   const {
     data: stats,
     refetch: accRefetch,
@@ -16,9 +18,13 @@ const Summary = () => {
   } = useGetAccountsQuery();
   const entries = useSelector((state) => state.auth.entries);
 
-  const sortedDays = Object.entries(sortStats(entries));
-  let oldest = sortedDays[0][0];
-  let latest = sortedDays[sortedDays.length - 1][0];
+  let oldest = "";
+  let latest = "";
+  if (data) {
+    const sortedDays = Object.entries(sortStats(data.entries));
+    oldest = sortedDays[0][0];
+    latest = sortedDays[sortedDays.length - 1][0];
+  }
 
   let totalBalance = 0;
   if (stats) {

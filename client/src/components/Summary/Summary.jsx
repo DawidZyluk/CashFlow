@@ -18,10 +18,12 @@ const Summary = () => {
   } = useGetAccountsQuery();
   const entries = useSelector((state) => state.auth.entries);
 
-  let oldest = "";
-  let latest = "";
-  if (data) {
+  let oldest = "No entries";
+  let latest = "No entries";
+  console.log(data)
+  if (data?.entries.length) {
     const sortedDays = Object.entries(sortStats(data.entries));
+    console.log(sortedDays)
     oldest = sortedDays[0][0];
     latest = sortedDays[sortedDays.length - 1][0];
   }

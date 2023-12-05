@@ -78,6 +78,7 @@ const AccountsList = () => {
         <Box
           sx={{
             mt: 1,
+            height: '100%',
             maxHeight: "185px",
             overflowY: "scroll",
             "&::-webkit-scrollbar": {

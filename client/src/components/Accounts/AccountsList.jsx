@@ -57,7 +57,7 @@ const AccountsList = () => {
           content: '""',
           position: "absolute",
           zIndex: 10,
-          bottom: 15,
+          bottom: isNonSmallMobile ? 15 : 10,
           height: 10,
           width: "98%",
           boxShadow: "inset 0px -15px 8px -11px white",
@@ -78,7 +78,8 @@ const AccountsList = () => {
         <Box
           sx={{
             mt: 1,
-            maxHeight: "185px",
+            height: "100%",
+            maxHeight: isNonSmallMobile ? "185px" : "180px",
             overflowY: "scroll",
             "&::-webkit-scrollbar": {
               display: "none",

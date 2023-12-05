@@ -45,7 +45,7 @@ const Summary = () => {
       <Box
         sx={{
           display: "grid",
-          gridGap: "20px",
+          gridGap: isNonSmallMobile? '20px' : '10px',
           height: "100%",
           gridTemplateColumns: isNonSmallMobile ? "repeat(2, 1fr)" : undefined,
           gridTemplateRows: isNonSmallMobile ? "1fr 1fr" : undefined,

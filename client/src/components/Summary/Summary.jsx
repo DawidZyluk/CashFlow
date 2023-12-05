@@ -20,7 +20,6 @@ const Summary = () => {
 
   let oldest = "No entries";
   let latest = "No entries";
-  console.log(data)
   if (data?.entries.length) {
     const sortedDays = Object.entries(sortStats(data.entries));
     console.log(sortedDays)

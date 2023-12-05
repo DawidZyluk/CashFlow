@@ -62,18 +62,18 @@ export default function AddEntry({ variant = "add", id = null }) {
   const accounts = useSelector((state) => state.auth.accounts);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const [date, setDate] = useState(dayjs());
+  const [date, setDate] = useState();
   let entryData;
   let entryRefetch;
 
   const handleClickOpen = () => {
-    setDate(dayjs());
     setTab(0);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setDate(dayjs());
   };
 
   if (variant == "edit") {
@@ -91,7 +91,7 @@ export default function AddEntry({ variant = "add", id = null }) {
       }
       const res = await addEntry({
         ...values,
-        date: date.format(),
+        date: values.date.format(),
       }).unwrap();
       dispatch(setEntries({ entries: [...entries, res] }));
       setOpen(false);
@@ -112,10 +112,11 @@ export default function AddEntry({ variant = "add", id = null }) {
       const res = await updateEntry({
         id,
         ...values,
-        date: date.format(),
+        date: values.date,
       }).unwrap();
       refetch();
       entryRefetch();
+      dispatch(setEntries({ entries: [...entries] }));
       dispatch(setAccounts({ ...data }));
       setOpen(false);
       onSubmitProps.resetForm();
@@ -228,6 +229,7 @@ export default function AddEntry({ variant = "add", id = null }) {
                 handleBlur,
                 handleChange,
                 handleSubmit,
+                setFieldValue,
                 isValid,
                 isSubmitting,
               }) => (
@@ -255,13 +257,19 @@ export default function AddEntry({ variant = "add", id = null }) {
                         label="Date"
                         id="date"
                         autoComplete="date"
+                        openTo="day"
                         views={["year", "month", "day"]}
                         onBlur={handleBlur}
-                        onChange={(value) => setDate(value)}
-                        value={variant === "edit" ? dayjs(values.date) : date}
+                        onChange={(value) => setFieldValue("date", value)}
+                        value={date || dayjs(values.date)}
                         error={Boolean(touched.date) && Boolean(errors.date)}
                         helperText={touched.date && errors.date}
                         sx={{ gridColumn: "span 2" }}
+                        slotProps={{
+                          actionBar: {
+                            actions: ["today"],
+                          },
+                        }}
                         disableFuture
                       />
                     </LocalizationProvider>

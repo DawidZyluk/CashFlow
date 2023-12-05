@@ -82,7 +82,7 @@ const AccountButon = ({ account }) => {
       }
       const res = await addEntry({
         ...values,
-        date: date.format(),
+        date: values.date.format(),
       }).unwrap();
       dispatch(setEntries({ entries: [...entries, res] }));
       setOpen(false);
@@ -185,7 +185,9 @@ const AccountButon = ({ account }) => {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
+                  {error.status !== 500
+                    ? error?.data?.message
+                    : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}
@@ -202,6 +204,7 @@ const AccountButon = ({ account }) => {
                 handleBlur,
                 handleChange,
                 handleSubmit,
+                setFieldValue,
                 isValid,
                 isSubmitting,
               }) => (
@@ -231,7 +234,7 @@ const AccountButon = ({ account }) => {
                         autoComplete="date"
                         views={["year", "month", "day"]}
                         onBlur={handleBlur}
-                        onChange={(value) => setDate(value)}
+                        onChange={(value) => setFieldValue("date", value)}
                         value={date}
                         error={Boolean(touched.date) && Boolean(errors.date)}
                         helperText={touched.date && errors.date}
@@ -371,7 +374,9 @@ const AccountButon = ({ account }) => {
                 }}
               >
                 <Typography sx={{ color: theme.palette.error.main }}>
-                  {error.status !== 500 ? error?.data?.message  : "Something went wrong. Try again"}
+                  {error.status !== 500
+                    ? error?.data?.message
+                    : "Something went wrong. Try again"}
                 </Typography>
               </Card>
             )}

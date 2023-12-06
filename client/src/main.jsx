@@ -7,7 +7,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import HomePage from "./screens/HomePage.jsx";
+import HomePage from "./screens/HomePage/HomePage.jsx";
 import RootLayout from "./screens/RootLayout.jsx";
 import { themeOptions } from "./theme";
 import { Provider } from "react-redux";

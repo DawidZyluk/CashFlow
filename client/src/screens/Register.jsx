@@ -60,7 +60,7 @@ export default function Register() {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <Container component="main" maxWidth="sm" sx={{mb: 13}}>
       <Card
         sx={{
           boxShadow: 3,

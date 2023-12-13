@@ -9,10 +9,11 @@ const CoinAvatar = ({
   },
 }) => {
   const theme = useTheme();
-  const borderWidth = (sx.diameter.split('p')[0] / 10) - 1;
-  const shade = (sx.diameter.split('p')[0] / 20)
+  const borderWidth = sx.diameter.split("p")[0] / 10 - 1;
+  const shade = sx.diameter.split("p")[0] / 20;
   return (
     <Avatar
+      aria-label="Coin avatar"
       sx={{
         border: borderWidth,
         borderColor: theme.palette.gold[400],
@@ -21,7 +22,9 @@ const CoinAvatar = ({
         height: sx.diameter,
         width: sx.diameter,
         fontSize: `calc(${sx.diameter} / 2)`,
-        boxShadow: `0 ${shade/2}px ${shade}px rgba(0,0,0,0.4), inset 0 0 ${shade}px rgba(0,0,0,0.3)`,
+        boxShadow: `0 ${
+          shade / 2
+        }px ${shade}px rgba(0,0,0,0.4), inset 0 0 ${shade}px rgba(0,0,0,0.3)`,
         "&::before": {
           content: '""',
           position: "absolute",

@@ -57,8 +57,7 @@ export default function RecentEntries() {
       headerName: "Date",
       flex: 0.8,
       minWidth: 100,
-      valueFormatter: (params) =>
-        dayjs(params.value).format("DD/MM/YYYY"),
+      valueFormatter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
     },
     {
       field: "accountId",
@@ -117,6 +116,7 @@ export default function RecentEntries() {
           <AddEntry variant="edit" id={id} />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
+            role="button"
             label="Delete"
             onClick={() => {
               handleDelete(id);
@@ -149,6 +149,7 @@ export default function RecentEntries() {
         <AddEntry />
       </Box>
       <Box
+        role="grid"
         sx={{
           mt: 2,
           height: 450,

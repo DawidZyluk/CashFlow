@@ -176,6 +176,7 @@ export default function AddEntry({ variant = "add", id = null }) {
     <div>
       {variant == "add" ? (
         <Button
+          role="button"
           variant="outlined"
           sx={{ height: "100%" }}
           onClick={handleClickOpen}
@@ -183,7 +184,7 @@ export default function AddEntry({ variant = "add", id = null }) {
           + Add Entry
         </Button>
       ) : (
-        <IconButton onClick={handleClickOpen} size="small">
+        <IconButton role="button" aria-label="Edit button" onClick={handleClickOpen} size="small">
           <EditIcon sx={{ fontSize: "1.2rem" }} />
         </IconButton>
       )}

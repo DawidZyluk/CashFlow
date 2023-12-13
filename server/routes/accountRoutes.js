@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 import { validator } from '../middleware/validatorMiddleware.js';
 import { addAccount, deleteAccount, getAccount, getAccounts, updateAccount } from '../controllers/accountController.js';
-import { addAccountSchema } from '../validators/accountValidators.js/addAccountValidator.js';
+import { addAccountSchema } from '../validators/accountValidators/addAccountValidator.js';
 import { protect } from '../middleware/authMiddleware.js';
 import checkId from '../middleware/checkId.js';
 

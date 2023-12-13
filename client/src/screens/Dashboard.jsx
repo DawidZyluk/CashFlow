@@ -12,7 +12,7 @@ import Summary from "../components/Summary/Summary";
 const Dashboard = () => {
   const { verified } = useSelector((state) => state.auth.userInfo);
   const isNonMobile = useMediaQuery("(min-width:1200px)");
-
+  const isNonSmallMobile = useMediaQuery("(min-width:910px)");
   
   return (
     <Box sx={{mx: isNonMobile ? 17 : 3, my: 5, mb: 10}}>
@@ -23,7 +23,7 @@ const Dashboard = () => {
       <Box
         sx={{
           display: "grid",
-          gridGap: '20px',
+          gridGap: isNonSmallMobile? '20px' : '10px',
           gridTemplateColumns: "repeat(6, 1fr)",
           // gridTemplateRows: "repeat(8,120px)",
           // gridAutoRows: 'minmax(120px, fit-content)'
